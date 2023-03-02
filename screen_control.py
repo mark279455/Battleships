@@ -2,6 +2,7 @@ from colorama import just_fix_windows_console
 
 just_fix_windows_console()
 
+
 class ScreenControl:
     """
     Controls all display elements
@@ -83,7 +84,6 @@ class ScreenControl:
         """
         position and print data within the players map grid
         """
-        ScreenControl.log.debug(f"coord {coord}")
         x = (
             (self.start_x + ScreenControl.gridstart_x)
             + (int(coord[0]) * ScreenControl.gridgap_y)
@@ -139,7 +139,7 @@ class ScreenControl:
 
     def printname(self, text):
         """
-        print the players name in the correct position on the screen 
+        print the players name in the correct position on the screen
         """
         ScreenControl.pos(
             self.start_x + ScreenControl.labelstart_x,
@@ -159,12 +159,11 @@ class ScreenControl:
             "Hits:",
         )
 
-
     labeldata_x = 11
 
     def updatemoves(self, text):
         """
-        update the number of moves on the screen 
+        update the number of moves on the screen
         """
         ScreenControl.pos(
             self.start_x + ScreenControl.labeldata_x,
@@ -172,18 +171,15 @@ class ScreenControl:
             text,
         )
 
-
     def updatehits(self, text):
         """
-        update the number of hits on the screen 
+        update the number of hits on the screen
         """
         ScreenControl.pos(
             self.start_x + ScreenControl.labeldata_x,
             self.start_y + ScreenControl.hit_y,
             text,
         )
-
-
 
     @staticmethod
     def printinfomessage(text):
@@ -207,7 +203,6 @@ class ScreenControl:
             ScreenControl.infomessage_y,
             " " * ScreenControl.screenwidth,
         )
-
 
     gamemessage_y = 22
 
@@ -243,7 +238,6 @@ class ScreenControl:
             True,
         )
 
-
     def clearplayermessage(self):
         """
         clear hit / miss information
@@ -258,7 +252,8 @@ class ScreenControl:
         position cursor and get guess for player
         """
         ScreenControl.pos(
-            ScreenControl.start_x, ScreenControl.guess_y, "Make a guess: ", True
+            ScreenControl.start_x, ScreenControl.guess_y,
+            "Make a guess: ", True
         )
 
     @staticmethod
@@ -326,9 +321,8 @@ class ScreenControl:
         ScreenControl.pos(41, 24, f"miss: {ScreenControl.shellmiss}", True)
         ScreenControl.pos(61, 24, f"????: {ScreenControl.empty}", True)
 
-
     @staticmethod
-    def pos(x, y, text, *nolinefeed):
+    def pos(x_coord, y_coord, text, *nolinefeed):
         """
         Postions text on the display
         x - horizontal co-ord starts at 1 in top left corner
@@ -338,10 +332,9 @@ class ScreenControl:
         set nolinefeed to true for subsequest input statement
         """
         if nolinefeed:
-            print(f"\x1b[{y};{x}H{text}", end="")
+            print(f"\x1b[{y_coord};{x_coord}H{text}", end="")
         else:
-            print(f"\x1b[{y};{x}H{text}")
-
+            print(f"\x1b[{y_coord};{x_coord}H{text}")
 
     @staticmethod
     def clearscreen():
@@ -349,7 +342,6 @@ class ScreenControl:
         Clears the screen
         """
         print("\x1b[2J")
-
 
     @staticmethod
     def center(row, text):
@@ -367,5 +359,3 @@ class ScreenControl:
         -   'b' is ascii '98' will be converted to '1' ascii '49'
         """
         return chr(ord(str(let)) - 49)
-
-

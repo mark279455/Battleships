@@ -34,7 +34,7 @@ class Board:
     def setupboard(self):
         """
             Shows board details for this board through ScreenControl on
-            the screen 
+            the screen
         """
         self.screencontrol.printname(
             f"{ScreenControl.fgcyan + ScreenControl.bright}"
@@ -116,7 +116,6 @@ class Board:
             else:
                 quit()
 
-
     def makerandomguess(self):
         """
         Generates a random guess for the computer
@@ -130,7 +129,6 @@ class Board:
                 break
         return resultlist
 
-
     def validateinput(self, playerinput):
         """
         Validates the players guess.
@@ -138,7 +136,7 @@ class Board:
         -   1 letter and 1 number
         -   letter is between a and f
         -   number between 1 and 6
-        -   player hasnt targetted this square before        
+        -   player hasnt targetted this square before
         """
         resultlist = []
         playerinput = playerinput.strip().lower()
@@ -180,7 +178,6 @@ class Board:
             ScreenControl.printinfomessage(f"{e}, please try again")
         return False
 
-
     @staticmethod
     def num2let(num):
         """
@@ -211,6 +208,7 @@ def startgame(playername):
         validcoord = compboard.makeaguess()
         compboard.processguess(validcoord, playerboard)
 
+
 def getplayername():
     """
     ask for player name
@@ -232,6 +230,7 @@ def getplayername():
             ScreenControl.pos(8, 9, f"than {maxlength} characters.")
     return name
 
+
 def main():
     """
     main method
@@ -242,4 +241,3 @@ def main():
 
 
 main()
-
