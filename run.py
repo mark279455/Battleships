@@ -218,17 +218,20 @@ def getplayername():
     maxlength = 15
     ScreenControl.clearscreen()
     while True:
-        ScreenControl.pos(2, 3, "", True)
+        ScreenControl.pos(2, 2, "Welcome To Battleships")
+        ScreenControl.clearline(5)
+        ScreenControl.pos(2, 5, "", True)
         name = input("Please enter your name ")
         if len(name) > 0 and len(name) < maxlength:
             break
         else:
-            ScreenControl.pos(2, 5, f"You entered an invalid name '{name}'")
-            ScreenControl.pos(2, 6, "We dont mind which name you use but we")
-            ScreenControl.pos(8, 7, "are short of screenspace, so")
-            ScreenControl.pos(2, 8, "please use a name less")
-            ScreenControl.pos(8, 9, f"than {maxlength} characters.")
+            ScreenControl.pos(2, 8, f"You entered an invalid name '{name}'")
+            ScreenControl.pos(2, 10, "We dont mind which name you use but " +
+                              "we are short of screenspace, so")
+            ScreenControl.pos(2, 12, "please use a name less than " +
+                              f"{maxlength} characters.")
     return name
+
 
 
 def main():
