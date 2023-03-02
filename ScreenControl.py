@@ -82,18 +82,32 @@ class ScreenControl:
         """
         pass
 
+    columnlabel_x = 18
+    columnlabel_y = 1
+
     def printcolumnlabels(self, columnlist):
         """
         position and print the labels for the columns in the players map grid
         """
-        pass
+        columnlabel = " ".join([str(i) + " " for i in columnlist])
+        ScreenControl.pos(
+            self.start_x + ScreenControl.columnlabel_x,
+            self.start_y + ScreenControl.columnlabel_y,
+            f"{ScreenControl.fgcyan + ScreenControl.bright}{columnlabel}",
+        )
+
+    rowlabel_x = 16
 
     def printrowlabels(self, rowlist):
         """
         position and print the labels for the rows in the players map grid
         """
-        pass
-
+        for i in range(len(rowlist)):
+            ScreenControl.pos(
+                self.start_x + ScreenControl.rowlabel_x,
+                self.start_y + ScreenControl.gridgap_x + (i * 2),
+                rowlist[i],
+            )
 
     def clearline(y):
         """
