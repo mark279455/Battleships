@@ -1,17 +1,7 @@
-import logging
 import random
 import re
 
 from ScreenControl import ScreenControl
-
-
-def setup_logger(name, log_file, level=logging.DEBUG):
-    # To setup as many loggers as you want
-    handler = logging.FileHandler(log_file, "w", "utf-8")
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-    logger.addHandler(handler)
-    return logger
 
 
 class Board:
@@ -22,7 +12,6 @@ class Board:
     previous moves
     """
     startrow = 5
-    log = setup_logger("log", "bg.log", level=logging.DEBUG)
     size = 6
     num_ships = 5
 
@@ -73,7 +62,9 @@ class Board:
         """
         Shows this boards ships through ScreenControl on the screen.
         """
-        pass
+        for coord in self.ships:
+            self.screencontrol.showongrid(coord, ScreenControl.ship)
+        print(ScreenControl.resetall)
 
     def makeaguess(self):
         """
@@ -114,15 +105,6 @@ class Board:
         """
         return chr(ord(str(num)) + 49)
 
-    @staticmethod
-    def let2num(let):
-        """
-        Converts letters to numbers
-        -   ascii code of str(number) - 49
-        -   'b' is ascii '98' will be converted to '1' ascii '49'
-        """
-        pass
-
 
 def startgame(playername):
     """
@@ -135,6 +117,7 @@ def startgame(playername):
     compboard = Board("Computer", 40)
     ScreenControl.setupdisplay()
     playerboard.setupboard()
+    playerboard.showships()
     compboard.setupboard()
 
 

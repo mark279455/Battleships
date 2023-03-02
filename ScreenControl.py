@@ -1,6 +1,15 @@
+import logging
 from colorama import just_fix_windows_console
 
 just_fix_windows_console()
+
+def setup_logger(name, log_file, level=logging.DEBUG):
+    # To setup as many loggers as you want
+    handler = logging.FileHandler(log_file, "w", "utf-8")
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+    return logger
 
 class ScreenControl:
     """
@@ -8,6 +17,8 @@ class ScreenControl:
     -   where to put data on display
     -   what color
     """
+    log = setup_logger("log", "bg.log", level=logging.DEBUG)
+
     # foreground:
     fgblack = "\x1b[30m"
     fgred = "\x1b[31m"
@@ -76,11 +87,31 @@ class ScreenControl:
         self.start_y = start_y
         self.start_x = start_x
 
+    gridstart_x = 16
+    gridstart_y = 2
+
     def showongrid(self, coord, text):
         """
         position and print data within the players map grid
         """
-        pass
+        x = (
+            (self.start_x + ScreenControl.gridstart_x)
+            + (int(coord[0]) * ScreenControl.gridgap_y)
+            - 1
+        )
+        y = (
+            self.start_y
+            + ScreenControl.gridstart_y
+            + (int(ScreenControl.let2num(coord[1])) * ScreenControl.gridgap_x)
+        )
+
+        ScreenControl.pos(x, y, text)
+        ScreenControl.pos(x + 1, y, text)
+        ScreenControl.pos(x + 2, y, text)
+        ScreenControl.pos(x, y + 1, text)
+        ScreenControl.pos(x + 1, y + 1, text)
+        ScreenControl.pos(x + 2, y + 1, text)
+        print(ScreenControl.resetall)
 
     columnlabel_x = 18
     columnlabel_y = 1
@@ -284,4 +315,14 @@ class ScreenControl:
         """
         xpos = int((80 - len(text)) / 2)
         ScreenControl.pos(xpos, row, text)
+
+    @staticmethod
+    def let2num(let):
+        """
+        Converts letters to numbers
+        -   ascii code of str(number) - 49
+        -   'b' is ascii '98' will be converted to '1' ascii '49'
+        """
+        return chr(ord(str(let)) - 49)
+
 
