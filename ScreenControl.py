@@ -94,6 +94,7 @@ class ScreenControl:
         """
         position and print data within the players map grid
         """
+        ScreenControl.log.debug(f"coord {coord}")
         x = (
             (self.start_x + ScreenControl.gridstart_x)
             + (int(coord[0]) * ScreenControl.gridgap_y)
@@ -140,11 +141,12 @@ class ScreenControl:
                 rowlist[i],
             )
 
+    @staticmethod
     def clearline(y):
         """
         clear the line on the screen denoted by y
         """
-        pass
+        ScreenControl.pos(1, y, " " * 80)
 
     def printname(self, text):
         """
@@ -169,48 +171,95 @@ class ScreenControl:
         )
 
 
+    labeldata_x = 11
+
     def updatemoves(self, text):
         """
         update the number of moves on the screen 
         """
-        pass
+        ScreenControl.pos(
+            self.start_x + ScreenControl.labeldata_x,
+            self.start_y + ScreenControl.move_y,
+            text,
+        )
+
 
     def updatehits(self, text):
         """
         update the number of hits on the screen 
         """
-        pass
+        ScreenControl.pos(
+            self.start_x + ScreenControl.labeldata_x,
+            self.start_y + ScreenControl.hit_y,
+            text,
+        )
 
+
+
+    @staticmethod
     def printinfomessage(text):
         """
         show error messages from invalid guesses
         """
-        pass
+        ScreenControl.clearinfomessage()
+        ScreenControl.pos(
+            ScreenControl.start_x, ScreenControl.infomessage_y, text
+        )
 
-    def clearinfomessage(self):
+    infomessage_y = 23
+
+    @staticmethod
+    def clearinfomessage():
         """
         remove the error message from the screen
         """
-        pass
+        ScreenControl.pos(
+            ScreenControl.start_x,
+            ScreenControl.infomessage_y,
+            " " * ScreenControl.screenwidth,
+        )
 
 
-    def printendgamemessage(self, text, *nolinefeed):
+    gamemessage_y = 22
+
+    @staticmethod
+    def printendgamemessage(text, *nolinefeed):
         """
         print the end of game message
         """
-        pass
+        ScreenControl.pos(
+            ScreenControl.start_x,
+            ScreenControl.gamemessage_y,
+            " " * ScreenControl.screenwidth,
+        )
+        if nolinefeed:
+            ScreenControl.pos(
+                ScreenControl.start_x, ScreenControl.gamemessage_y, text, True
+            )
+        else:
+            ScreenControl.pos(
+                ScreenControl.start_x, ScreenControl.gamemessage_y, text
+            )
+
+    playermessage_y = 17
 
     def printplayermessage(self, text):
         """
         show hit / miss information for the last guess
         """
-        pass
+        ScreenControl.pos(
+            self.start_x + ScreenControl.playermessagestart_x,
+            self.start_y + ScreenControl.playermessage_y,
+            text,
+            True,
+        )
+
 
     def clearplayermessage(self):
         """
         clear hit / miss information
         """
-        pass
+        print("clearplayermessage 225")
 
     guess_y = 21
 
@@ -310,7 +359,7 @@ class ScreenControl:
         """
         Clears the screen
         """
-        # print("\x1b[2J")
+        print("\x1b[2J")
 
 
     @staticmethod

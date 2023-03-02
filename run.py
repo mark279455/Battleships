@@ -83,18 +83,53 @@ class Board:
                     break
         return validcoord
 
-    def processguess(self):
+    def processguess(self, guess, otherboard):
         """
         Processes the players validated guess
         - updates both players displays and checks game over
         """
-        pass
+        self.moves.append(guess)
+        if guess in otherboard.ships:
+            self.hits += 1
+            self.screencontrol.printplayermessage(
+                f"{self.name} hit a ship at {guess}"
+            )
+            otherboard.screencontrol.showongrid(guess, ScreenControl.shellhit)
+        else:
+            self.screencontrol.printplayermessage(
+                f"{self.name} missed at {guess}"
+            )
+            otherboard.screencontrol.showongrid(guess, ScreenControl.shellmiss)
+        self.screencontrol.updatemoves(len(self.moves))
+        self.screencontrol.updatehits(self.hits)
+        if self.hits == len(otherboard.ships):
+            ScreenControl.clearline(24)
+            msg = "lose." if self.name.lower() == "computer" else "win."
+            ScreenControl.printendgamemessage(
+                f"{self.name} has sunk all of {otherboard.name}'s"
+                + f"ships. - you {msg}"
+            )
+            ScreenControl.printinfomessage("Play again?")
+            ans = input("")
+            if ans.lower().startswith("y"):
+                main()
+            else:
+                quit()
+
 
     def makerandomguess(self):
         """
         Generates a random guess for the computer
         """
-        pass
+        resultlist = []
+        while True:
+            x = random.choice(self.columns)
+            y = random.choice(self.rows)
+            resultlist = [x, y]
+            if resultlist not in self.moves:
+                break
+        return resultlist
+
 
     def validateinput(self, playerinput):
         """
