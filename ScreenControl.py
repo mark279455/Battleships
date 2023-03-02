@@ -68,7 +68,6 @@ class ScreenControl:
     shellmiss = bgyellow + " " + resetall
     empty = bgwhite + bright + " " + resetall
 
-
     def __init__(self, start_y, start_x):
         """
         Constructor
@@ -76,6 +75,103 @@ class ScreenControl:
         """
         self.start_y = start_y
         self.start_x = start_x
+
+    def showongrid(self, coord, text):
+        """
+        position and print data within the players map grid
+        """
+        pass
+
+    def printcolumnlabels(self, columnlist):
+        """
+        position and print the labels for the columns in the players map grid
+        """
+        pass
+
+    def printrowlabels(self, rowlist):
+        """
+        position and print the labels for the rows in the players map grid
+        """
+        pass
+
+
+    def clearline(y):
+        """
+        clear the line on the screen denoted by y
+        """
+        pass
+
+    def printname(self, text):
+        """
+        print the players name in the correct position on the screen 
+        """
+        ScreenControl.pos(
+            self.start_x + ScreenControl.labelstart_x,
+            self.start_y,
+            f"{ScreenControl.fgcyan + ScreenControl.bright}"
+            + f"{ScreenControl.underline_on}"
+            + f"{text + ScreenControl.underline_off}",
+        )
+        ScreenControl.pos(
+            self.start_x + ScreenControl.labelstart_x,
+            self.start_y + ScreenControl.move_y,
+            "Moves:",
+        )
+        ScreenControl.pos(
+            self.start_x + ScreenControl.labelstart_x,
+            self.start_y + ScreenControl.hit_y,
+            "Hits:",
+        )
+
+
+    def updatemoves(self, text):
+        """
+        update the number of moves on the screen 
+        """
+        pass
+
+    def updatehits(self, text):
+        """
+        update the number of hits on the screen 
+        """
+        pass
+
+    def printinfomessage(text):
+        """
+        show error messages from invalid guesses
+        """
+        pass
+
+    def clearinfomessage(self):
+        """
+        remove the error message from the screen
+        """
+        pass
+
+
+    def printendgamemessage(self, text, *nolinefeed):
+        """
+        print the end of game message
+        """
+        pass
+
+    def printplayermessage(self, text):
+        """
+        show hit / miss information for the last guess
+        """
+        pass
+
+    def clearplayermessage(self):
+        """
+        clear hit / miss information
+        """
+        pass
+
+    def makeaguess(self):
+        """
+        position cursor and get guess for player
+        """
+        pass
 
     @staticmethod
     def setupdisplay():
@@ -149,6 +245,9 @@ class ScreenControl:
         Postions text on the display
         x - horizontal co-ord starts at 1 in top left corner
         y - vertical co-ord starts at 1 in top left corner
+
+        move to x,y and print text
+        set nolinefeed to true for subsequest input statement
         """
         if nolinefeed:
             print(f"\x1b[{y};{x}H{text}", end="")
@@ -161,7 +260,7 @@ class ScreenControl:
         """
         Clears the screen
         """
-        print("\x1b[2J")
+        # print("\x1b[2J")
 
 
     @staticmethod
@@ -172,89 +271,3 @@ class ScreenControl:
         xpos = int((80 - len(text)) / 2)
         ScreenControl.pos(xpos, row, text)
 
-    def showongrid(self, coord, text):
-        """
-        position and print data within the players map grid
-        """
-        pass
-
-    def printcolumnlabels(self, columnlist):
-        """
-        position and print the labels for the columns in the players map grid
-        """
-        pass
-
-    def printrowlabels(self, rowlist):
-        """
-        position and print the labels for the rows in the players map grid
-        """
-        pass
-
-
-    def clearline(y):
-        """
-        clear the line on the screen denoted by y
-        """
-        pass
-
-    def pos(x, y, text, *nolinefeed):
-        """
-        position the cursor at position x,y on the screen and print the text
-        set nolinefeed to true for input statements
-        """
-        pass
-
-    def printname(self, text):
-        """
-        print the players name in the correct position on the screen 
-        """
-        pass
-
-    def updatemoves(self, text):
-        """
-        update the number of moves on the screen 
-        """
-        pass
-
-    def updatehits(self, text):
-        """
-        update the number of hits on the screen 
-        """
-        pass
-
-    def printinfomessage(text):
-        """
-        show error messages from invalid guesses
-        """
-        pass
-
-    def clearinfomessage():
-        """
-        remove the error message from the screen
-        """
-        pass
-
-
-    def printendgamemessage(text, *nolinefeed):
-        """
-        print the end of game message
-        """
-        pass
-
-    def printplayermessage(self, text):
-        """
-        show hit / miss information for the last guess
-        """
-        pass
-
-    def clearplayermessage(self):
-        """
-        clear hit / miss information
-        """
-        pass
-
-    def makeaguess():
-        """
-        position cursor and get guess for player
-        """
-        pass

@@ -15,18 +15,25 @@ def setup_logger(name, log_file, level=logging.DEBUG):
 
 
 class Board:
+    """
+    class for board
+    controls locations of ships
+    number of hits and misses
+    previous moves
+    """
     startrow = 5
     log = setup_logger("log", "bg.log", level=logging.DEBUG)
     size = 6
     num_ships = 5
 
     def __init__(self, name, start_x):
+        print(f"Board {name}")
         self.screencontrol = ScreenControl(5, start_x)
         self.hits = 0
         self.ships = []
         self.moves = []
         self.columns = [str(i) for i in range(1, self.size + 1)]
-        self.rows = [ScreenControl.num2let(i) for i in range(Board.size)]
+        self.rows = [Board.num2let(i) for i in range(Board.size)]
 
         while len(self.ships) < Board.num_ships:
             a = random.choice(self.columns)
@@ -35,11 +42,11 @@ class Board:
                 self.ships.append([a, b])
         self.name = name
 
-
-    """
-        Shows board details for this board through ScreenControl on the screen 
-    """
     def setupboard(self):
+        """
+            Shows board details for this board through ScreenControl on
+            the screen 
+        """
         self.screencontrol.printname(
             f"{ScreenControl.fgcyan + ScreenControl.bright}"
             + f"{ScreenControl.underline_on}"
@@ -62,19 +69,17 @@ class Board:
                 )
         print(ScreenControl.resetall)
 
-
     def showships(self):
         """
-        Shows this boards ships through ScreenControl on the screen 
+        Shows this boards ships through ScreenControl on the screen.
         """
         pass
 
     def makeaguess(self):
         """
-        Takes the players guess ScreenControl on the screen 
+        Takes the players guess ScreenControl on the screen.
         """
         pass
-
 
     def processguess(self):
         """
@@ -105,7 +110,6 @@ class Board:
         """
         Converts numbers to letters
         -   ascii code of str(number) + 49
-        -   e.g. 
         -   '0' is ascii '48' will be converted to 'a' ascii '97'
         """
         return chr(ord(str(num)) + 49)
@@ -115,43 +119,24 @@ class Board:
         """
         Converts letters to numbers
         -   ascii code of str(number) - 49
-        -   e.g. 
         -   'b' is ascii '98' will be converted to '1' ascii '49'
         """
         pass
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def startgame(playername):
+    """
+    creates boards for player and computer
+    sets up display
+    shows player and computers boards on display
+    """
+    print("129")
     playerboard = Board(playername, 0)
     compboard = Board("Computer", 40)
     ScreenControl.setupdisplay()
     playerboard.setupboard()
+    compboard.setupboard()
+
 
 def main():
     # playername = input("Please enter your name\n")
@@ -159,9 +144,5 @@ def main():
     startgame(playername)
 
 
-
-
-print(f"1 = {Board.num2let('0')}")
-# main()
-# quit()
+main()
 
