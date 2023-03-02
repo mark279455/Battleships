@@ -67,3 +67,89 @@ class ScreenControl:
     def __init__(self, start_y, start_x):
         self.start_y = start_y
         self.start_x = start_x
+
+    @staticmethod
+    def setupdisplay():
+        ScreenControl.clearscreen()
+        ScreenControl.pos(
+            ScreenControl.start_x,
+            ScreenControl.boardblocktop_y,
+            f"{ScreenControl.framecol + ScreenControl.bright}"
+            + " " * ScreenControl.screenwidth
+            + ScreenControl.resetall,
+        )
+        ScreenControl.pos(
+            ScreenControl.start_x,
+            ScreenControl.boardblockbottom_y,
+            f"{ScreenControl.framecol + ScreenControl.bright}"
+            + " " * ScreenControl.screenwidth
+            + ScreenControl.resetall,
+        )
+        for x in range(
+            ScreenControl.boardblocktop_y + 1, ScreenControl.boardblockbottom_y
+        ):
+            ScreenControl.pos(
+                int(ScreenControl.screenwidth / 2),
+                x,
+                f"{ScreenControl.framecol + ScreenControl.bright}"
+                + f" {ScreenControl.resetall}",
+            )
+            ScreenControl.pos(
+                ScreenControl.start_x,
+                x,
+                f"{ScreenControl.framecol + ScreenControl.bright}"
+                + f" {ScreenControl.resetall}",
+            )
+            ScreenControl.pos(
+                ScreenControl.screenwidth,
+                x,
+                f"{ScreenControl.framecol + ScreenControl.bright}"
+                + f" {ScreenControl.resetall}",
+            )
+
+        ScreenControl.center(
+            1,
+            f"{ScreenControl.fgwhite + ScreenControl.bright}"
+            + f"{ScreenControl.underline_on + 'Welcome to Battleships'}"
+            + f"{ScreenControl.underline_off}",
+        )
+        ScreenControl.center(
+            2,
+            "You have 5 ships, as does the computer, "
+            + "Columns are 1 to 6, rows are a to f.",
+        )
+        ScreenControl.center(
+            3, "You can pick a square " + "in either order - eg 'a5' or '3c'"
+        )
+        ScreenControl.pos(1, 24, f"ship: {ScreenControl.ship}", True)
+        ScreenControl.pos(21, 24, f"hit:  {ScreenControl.shellhit}", True)
+        ScreenControl.pos(41, 24, f"miss: {ScreenControl.shellmiss}", True)
+        ScreenControl.pos(61, 24, f"????: {ScreenControl.empty}", True)
+
+
+    @staticmethod
+    def pos(x, y, text, *nolinefeed):
+        """
+        # position cursor at x across, y down and print text
+        """
+        if nolinefeed:
+            print(f"\x1b[{y};{x}H{text}", end="")
+        else:
+            print(f"\x1b[{y};{x}H{text}")
+
+
+    @staticmethod
+    def num2let(num):
+        return chr(ord(str(num)) + 49)
+
+    @staticmethod
+    def clearscreen():
+        print("\x1b[2J")  # clear the screen
+
+    @staticmethod
+    def center(row, text):
+        """
+        pad text so that its central in window (80 cols)
+        """
+        xpos = int((80 - len(text)) / 2)
+        ScreenControl.pos(xpos, row, text)
