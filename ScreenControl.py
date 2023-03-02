@@ -212,11 +212,16 @@ class ScreenControl:
         """
         pass
 
-    def makeaguess(self):
+    guess_y = 21
+
+    @staticmethod
+    def makeaguess():
         """
         position cursor and get guess for player
         """
-        pass
+        ScreenControl.pos(
+            ScreenControl.start_x, ScreenControl.guess_y, "Make a guess: ", True
+        )
 
     @staticmethod
     def setupdisplay():

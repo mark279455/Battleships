@@ -68,9 +68,20 @@ class Board:
 
     def makeaguess(self):
         """
-        Takes the players guess ScreenControl on the screen.
+        Takes the players guess through ScreenControl on the screen.
         """
-        pass
+        validcoord = []
+        if self.name.lower().startswith("comp"):
+            return self.makerandomguess()
+        else:
+            while True:
+                ScreenControl.clearline(21)
+                self.screencontrol.makeaguess()
+                playerinput = input("")
+                validcoord = self.validateinput(playerinput)
+                if validcoord:
+                    break
+        return validcoord
 
     def processguess(self):
         """
@@ -85,7 +96,7 @@ class Board:
         """
         pass
 
-    def validateinput(self):
+    def validateinput(self, playerinput):
         """
         Validates the players guess.
         -   2 chars long
@@ -94,7 +105,46 @@ class Board:
         -   number between 1 and 6
         -   player hasnt targetted this square before        
         """
-        pass
+        resultlist = []
+        playerinput = playerinput.strip().lower()
+        try:
+            if len(playerinput) != 2:
+                raise ValueError(
+                    f"Input is 2 digits, a letter and a "
+                    + f"number - you gave '{playerinput}'"
+                )
+            else:
+                searchletters = "".join([str(i) for i in self.columns])
+                searchnumbers = "".join([str(i) for i in self.rows])
+                letnum = re.search(
+                    "^[" + searchletters + "][" + searchnumbers + "]$",
+                    playerinput,
+                )
+                numlet = re.search(
+                    "^[" + searchnumbers + "][" + searchletters + "]$",
+                    playerinput,
+                )
+            if letnum is not None:
+                resultlist = [playerinput[0], playerinput[1]]
+            elif numlet is not None:
+                resultlist = [playerinput[::-1][0], playerinput[::-1][1]]
+            else:
+                raise ValueError(
+                    f"input out of range, "
+                    + f"'{playerinput}' is not on the board"
+                )
+
+            if resultlist in self.moves:
+                raise ValueError(
+                    f"Coordinate {playerinput} has already been targeted"
+                )
+            else:
+                ScreenControl.clearinfomessage()
+                return resultlist
+        except ValueError as e:
+            ScreenControl.printinfomessage(f"{e}, please try again")
+        return False
+
 
     @staticmethod
     def num2let(num):
@@ -119,6 +169,13 @@ def startgame(playername):
     playerboard.setupboard()
     playerboard.showships()
     compboard.setupboard()
+
+    while True:
+        validcoord = playerboard.makeaguess()
+        playerboard.processguess(validcoord, compboard)
+        validcoord = compboard.makeaguess()
+        compboard.processguess(validcoord, playerboard)
+
 
 
 def main():
