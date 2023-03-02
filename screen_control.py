@@ -1,15 +1,6 @@
-import logging
 from colorama import just_fix_windows_console
 
 just_fix_windows_console()
-
-def setup_logger(name, log_file, level=logging.DEBUG):
-    # To setup as many loggers as you want
-    handler = logging.FileHandler(log_file, "w", "utf-8")
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-    logger.addHandler(handler)
-    return logger
 
 class ScreenControl:
     """
@@ -17,8 +8,6 @@ class ScreenControl:
     -   where to put data on display
     -   what color
     """
-    log = setup_logger("log", "bg.log", level=logging.DEBUG)
-
     # foreground:
     fgblack = "\x1b[30m"
     fgred = "\x1b[31m"

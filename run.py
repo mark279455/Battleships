@@ -1,7 +1,7 @@
 import random
 import re
 
-from ScreenControl import ScreenControl
+from screen_control import ScreenControl
 
 
 class Board:
@@ -211,11 +211,33 @@ def startgame(playername):
         validcoord = compboard.makeaguess()
         compboard.processguess(validcoord, playerboard)
 
-
+def getplayername():
+    """
+    ask for player name
+    verify its length is > 0
+    and less than 15
+    """
+    maxlength = 15
+    ScreenControl.clearscreen()
+    while True:
+        ScreenControl.pos(2, 3, "", True)
+        name = input("Please enter your name ")
+        if len(name) > 0 and len(name) < maxlength:
+            break
+        else:
+            ScreenControl.pos(2, 5, f"You entered an invalid name '{name}'")
+            ScreenControl.pos(2, 6, "We dont mind which name you use but we")
+            ScreenControl.pos(8, 7, "are short of screenspace, so")
+            ScreenControl.pos(2, 8, "please use a name less")
+            ScreenControl.pos(8, 9, f"than {maxlength} characters.")
+    return name
 
 def main():
-    # playername = input("Please enter your name\n")
-    playername = "Mark"
+    """
+    main method
+    catches player name and starts game
+    """
+    playername = getplayername()
     startgame(playername)
 
 
