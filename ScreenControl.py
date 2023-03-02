@@ -2,8 +2,12 @@ from colorama import just_fix_windows_console
 
 just_fix_windows_console()
 
-
 class ScreenControl:
+    """
+    Controls all display elements
+    -   where to put data on display
+    -   what color
+    """
     # foreground:
     fgblack = "\x1b[30m"
     fgred = "\x1b[31m"
@@ -64,12 +68,24 @@ class ScreenControl:
     shellmiss = bgyellow + " " + resetall
     empty = bgwhite + bright + " " + resetall
 
+
     def __init__(self, start_y, start_x):
+        """
+        Constructor
+        -   defines start position of the players area
+        """
         self.start_y = start_y
         self.start_x = start_x
 
     @staticmethod
     def setupdisplay():
+        """
+        setup the commom display areas
+        -   heading
+        -   instructions
+        -   error messages
+        -   frame
+        """
         ScreenControl.clearscreen()
         ScreenControl.pos(
             ScreenControl.start_x,
@@ -130,7 +146,9 @@ class ScreenControl:
     @staticmethod
     def pos(x, y, text, *nolinefeed):
         """
-        # position cursor at x across, y down and print text
+        Postions text on the display
+        x - horizontal co-ord starts at 1 in top left corner
+        y - vertical co-ord starts at 1 in top left corner
         """
         if nolinefeed:
             print(f"\x1b[{y};{x}H{text}", end="")
@@ -139,17 +157,104 @@ class ScreenControl:
 
 
     @staticmethod
-    def num2let(num):
-        return chr(ord(str(num)) + 49)
-
-    @staticmethod
     def clearscreen():
-        print("\x1b[2J")  # clear the screen
+        """
+        Clears the screen
+        """
+        print("\x1b[2J")
+
 
     @staticmethod
     def center(row, text):
         """
-        pad text so that its central in window (80 cols)
+        position text so that its central in window (80 cols)
         """
         xpos = int((80 - len(text)) / 2)
         ScreenControl.pos(xpos, row, text)
+
+    def showongrid(self, coord, text):
+        """
+        position and print data within the players map grid
+        """
+        pass
+
+    def printcolumnlabels(self, columnlist):
+        """
+        position and print the labels for the columns in the players map grid
+        """
+        pass
+
+    def printrowlabels(self, rowlist):
+        """
+        position and print the labels for the rows in the players map grid
+        """
+        pass
+
+
+    def clearline(y):
+        """
+        clear the line on the screen denoted by y
+        """
+        pass
+
+    def pos(x, y, text, *nolinefeed):
+        """
+        position the cursor at position x,y on the screen and print the text
+        set nolinefeed to true for input statements
+        """
+        pass
+
+    def printname(self, text):
+        """
+        print the players name in the correct position on the screen 
+        """
+        pass
+
+    def updatemoves(self, text):
+        """
+        update the number of moves on the screen 
+        """
+        pass
+
+    def updatehits(self, text):
+        """
+        update the number of hits on the screen 
+        """
+        pass
+
+    def printinfomessage(text):
+        """
+        show error messages from invalid guesses
+        """
+        pass
+
+    def clearinfomessage():
+        """
+        remove the error message from the screen
+        """
+        pass
+
+
+    def printendgamemessage(text, *nolinefeed):
+        """
+        print the end of game message
+        """
+        pass
+
+    def printplayermessage(self, text):
+        """
+        show hit / miss information for the last guess
+        """
+        pass
+
+    def clearplayermessage(self):
+        """
+        clear hit / miss information
+        """
+        pass
+
+    def makeaguess():
+        """
+        position cursor and get guess for player
+        """
+        pass
