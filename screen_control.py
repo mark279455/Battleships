@@ -10,64 +10,67 @@ class ScreenControl:
     -   what color
     """
     # foreground:
-    fgblack = "\x1b[30m"
-    fgred = "\x1b[31m"
-    fggreen = "\x1b[32m"
-    fgyellow = "\x1b[33m"
-    fgblue = "\x1b[34m"
-    fgmagenta = "\x1b[35m"
-    fgcyan = "\x1b[36m"
-    fgwhite = "\x1b[37m"
-    fgreset = "\x1b[39m"
+    BG_BLACK = "\x1b[30m"
+    FG_RED = "\x1b[31m"
+    FG_GREEN = "\x1b[32m"
+    FG_YELLOW = "\x1b[33m"
+    FG_BLUE = "\x1b[34m"
+    FG_MAGENTA = "\x1b[35m"
+    FG_CYAN = "\x1b[36m"
+    FG_WHITE = "\x1b[37m"
+    FG_RESET = "\x1b[39m"
 
     # background
-    bgblack = "\x1b[40m"
-    bgred = "\x1b[41m"
-    bggreen = "\x1b[42m"
-    bgyellow = "\x1b[43m"
-    bgblue = "\x1b[44m"
-    bgmagenta = "\x1b[45m"
-    bgcyan = "\x1b[46m"
-    bgwhite = "\x1b[47m"
-    bgreset = "\x1b[49m"
+    BG_BLACK = "\x1b[40m"
+    BG_RED = "\x1b[41m"
+    BG_GREEN = "\x1b[42m"
+    BG_YELLOW = "\x1b[43m"
+    BG_BLUE = "\x1b[44m"
+    BG_MAGENTA = "\x1b[45m"
+    BG_CYAN = "\x1b[46m"
+    BG_WHITE = "\x1b[47m"
+    BG_RESET = "\x1b[49m"
 
-    underline_on = "\033[4m"
-    underline_off = "\033[0m"
+    UNDERLINE_ON = "\033[4m"
+    UNDERLINE_OFF = "\033[0m"
 
-    resetall = "\x1b[0m"  # reset all (colors and brightness)
-    bright = "\x1b[1m"  # bright
-    dim = "\x1b[2m"  # dim (looks same as normal brightness)
-    normal = "\x1b[22m"  # normal brightness
+    RESET_ALL = "\x1b[0m"  # reset all (colors and brightness)
+    BRIGHT = "\x1b[1m"  # bright
+    DIM = "\x1b[2m"  # dim (looks same as normal brightness)
+    NORMAL = "\x1b[22m"  # normal brightness
 
-    gridgap_x = 2
-    gridgap_y = 3
+    BOARD_BLOCK_BOTTOM_Y = 20
+    BOARD_BLOCK_TOP_Y = 4
 
-    screenwidth = 80
+    COLUMN_LABEL_X = 18
+    COLUMN_LABEL_Y = 1
 
-    start_x = 1
-    labelstart_x = 4
-    labeldata_x = 11
-    columnlabel_x = 18
-    gridstart_x = 16
-    rowlabel_x = 16
-    playermessagestart_x = 2
+    GAME_MESSAGE_Y = 22
 
-    boardblocktop_y = 4
-    boardblockbottom_y = 20
-    move_y = 4
-    hit_y = 6
-    columnlabel_y = 1
-    guess_y = 21
-    gridstart_y = 2
-    infomessage_y = 23
-    gamemessage_y = 22
-    playermessage_y = 17
+    GRID_GAP_X = 2
+    GRID_GAP_Y = 3
 
-    framecol = bgblue
-    ship = bgmagenta + bright + " " + resetall
-    shellhit = bgred + bright + " " + resetall
-    shellmiss = bgyellow + " " + resetall
-    empty = bgwhite + bright + " " + resetall
+    GRID_START_X = 16
+    GRID_START_Y = 2
+
+    GUESS_Y = 21
+    HIT_Y = 6
+    INFO_MESSAGE_Y = 23
+    LABEL_DATA_X = 11
+    LABEL_START_X = 4
+    MOVE_Y = 4
+    PLAYER_MESSAGE_START_X = 2
+    PLAYER_MESSAGE_Y = 17
+    ROW_LABEL_X = 16
+    SCREEN_WIDTH = 80
+    START_X = 1
+
+
+    framecol = BG_BLUE
+    ship = BG_MAGENTA + BRIGHT + " " + RESET_ALL
+    shellhit = BG_RED + BRIGHT + " " + RESET_ALL
+    shellmiss = BG_YELLOW + " " + RESET_ALL
+    empty = BG_WHITE + BRIGHT + " " + RESET_ALL
 
     def __init__(self, start_y, start_x):
         """
@@ -77,22 +80,19 @@ class ScreenControl:
         self.start_y = start_y
         self.start_x = start_x
 
-    gridstart_x = 16
-    gridstart_y = 2
-
     def showongrid(self, coord, text):
         """
         position and print data within the players map grid
         """
         x = (
-            (self.start_x + ScreenControl.gridstart_x)
-            + (int(coord[0]) * ScreenControl.gridgap_y)
+            (self.start_x + ScreenControl.GRID_START_X)
+            + (int(coord[0]) * ScreenControl.GRID_GAP_Y)
             - 1
         )
         y = (
             self.start_y
-            + ScreenControl.gridstart_y
-            + (int(ScreenControl.let2num(coord[1])) * ScreenControl.gridgap_x)
+            + ScreenControl.GRID_START_Y
+            + (int(ScreenControl.let2num(coord[1])) * ScreenControl.GRID_GAP_X)
         )
 
         ScreenControl.pos(x, y, text)
@@ -101,10 +101,7 @@ class ScreenControl:
         ScreenControl.pos(x, y + 1, text)
         ScreenControl.pos(x + 1, y + 1, text)
         ScreenControl.pos(x + 2, y + 1, text)
-        print(ScreenControl.resetall)
-
-    columnlabel_x = 18
-    columnlabel_y = 1
+        print(ScreenControl.RESET_ALL)
 
     def printcolumnlabels(self, columnlist):
         """
@@ -112,12 +109,10 @@ class ScreenControl:
         """
         columnlabel = " ".join([str(i) + " " for i in columnlist])
         ScreenControl.pos(
-            self.start_x + ScreenControl.columnlabel_x,
-            self.start_y + ScreenControl.columnlabel_y,
-            f"{ScreenControl.fgcyan + ScreenControl.bright}{columnlabel}",
+            self.start_x + ScreenControl.COLUMN_LABEL_X,
+            self.start_y + ScreenControl.COLUMN_LABEL_Y,
+            f"{ScreenControl.FG_CYAN + ScreenControl.BRIGHT}{columnlabel}",
         )
-
-    rowlabel_x = 16
 
     def printrowlabels(self, rowlist):
         """
@@ -125,8 +120,8 @@ class ScreenControl:
         """
         for i in range(len(rowlist)):
             ScreenControl.pos(
-                self.start_x + ScreenControl.rowlabel_x,
-                self.start_y + ScreenControl.gridgap_x + (i * 2),
+                self.start_x + ScreenControl.ROW_LABEL_X,
+                self.start_y + ScreenControl.GRID_GAP_X + (i * 2),
                 rowlist[i],
             )
 
@@ -142,32 +137,30 @@ class ScreenControl:
         print the players name in the correct position on the screen
         """
         ScreenControl.pos(
-            self.start_x + ScreenControl.labelstart_x,
+            self.start_x + ScreenControl.LABEL_START_X,
             self.start_y,
-            f"{ScreenControl.fgcyan + ScreenControl.bright}"
-            + f"{ScreenControl.underline_on}"
-            + f"{text + ScreenControl.underline_off}",
+            f"{ScreenControl.FG_CYAN + ScreenControl.BRIGHT}"
+            + f"{ScreenControl.UNDERLINE_ON}"
+            + f"{text + ScreenControl.UNDERLINE_OFF}",
         )
         ScreenControl.pos(
-            self.start_x + ScreenControl.labelstart_x,
-            self.start_y + ScreenControl.move_y,
+            self.start_x + ScreenControl.LABEL_START_X,
+            self.start_y + ScreenControl.MOVE_Y,
             "Moves:",
         )
         ScreenControl.pos(
-            self.start_x + ScreenControl.labelstart_x,
-            self.start_y + ScreenControl.hit_y,
+            self.start_x + ScreenControl.LABEL_START_X,
+            self.start_y + ScreenControl.HIT_Y,
             "Hits:",
         )
-
-    labeldata_x = 11
 
     def updatemoves(self, text):
         """
         update the number of moves on the screen
         """
         ScreenControl.pos(
-            self.start_x + ScreenControl.labeldata_x,
-            self.start_y + ScreenControl.move_y,
+            self.start_x + ScreenControl.LABEL_DATA_X,
+            self.start_y + ScreenControl.MOVE_Y,
             text,
         )
 
@@ -176,8 +169,8 @@ class ScreenControl:
         update the number of hits on the screen
         """
         ScreenControl.pos(
-            self.start_x + ScreenControl.labeldata_x,
-            self.start_y + ScreenControl.hit_y,
+            self.start_x + ScreenControl.LABEL_DATA_X,
+            self.start_y + ScreenControl.HIT_Y,
             text,
         )
 
@@ -188,10 +181,8 @@ class ScreenControl:
         """
         ScreenControl.clearinfomessage()
         ScreenControl.pos(
-            ScreenControl.start_x, ScreenControl.infomessage_y, text
+            ScreenControl.START_X, ScreenControl.INFO_MESSAGE_Y, text
         )
-
-    infomessage_y = 23
 
     @staticmethod
     def clearinfomessage():
@@ -199,12 +190,10 @@ class ScreenControl:
         remove the error message from the screen
         """
         ScreenControl.pos(
-            ScreenControl.start_x,
-            ScreenControl.infomessage_y,
-            " " * ScreenControl.screenwidth,
+            ScreenControl.START_X,
+            ScreenControl.INFO_MESSAGE_Y,
+            " " * ScreenControl.SCREEN_WIDTH,
         )
-
-    gamemessage_y = 22
 
     @staticmethod
     def printendgamemessage(text, *nolinefeed):
@@ -212,28 +201,26 @@ class ScreenControl:
         print the end of game message
         """
         ScreenControl.pos(
-            ScreenControl.start_x,
-            ScreenControl.gamemessage_y,
-            " " * ScreenControl.screenwidth,
+            ScreenControl.START_X,
+            ScreenControl.GAME_MESSAGE_Y,
+            " " * ScreenControl.SCREEN_WIDTH,
         )
         if nolinefeed:
             ScreenControl.pos(
-                ScreenControl.start_x, ScreenControl.gamemessage_y, text, True
+                ScreenControl.START_X, ScreenControl.GAME_MESSAGE_Y, text, True
             )
         else:
             ScreenControl.pos(
-                ScreenControl.start_x, ScreenControl.gamemessage_y, text
+                ScreenControl.START_X, ScreenControl.GAME_MESSAGE_Y, text
             )
-
-    playermessage_y = 17
 
     def printplayermessage(self, text):
         """
         show hit / miss information for the last guess
         """
         ScreenControl.pos(
-            self.start_x + ScreenControl.playermessagestart_x,
-            self.start_y + ScreenControl.playermessage_y,
+            self.start_x + ScreenControl.PLAYER_MESSAGE_START_X,
+            self.start_y + ScreenControl.PLAYER_MESSAGE_Y,
             text,
             True,
         )
@@ -244,15 +231,13 @@ class ScreenControl:
         """
         print("clearplayermessage 225")
 
-    guess_y = 21
-
     @staticmethod
     def makeaguess():
         """
         position cursor and get guess for player
         """
         ScreenControl.pos(
-            ScreenControl.start_x, ScreenControl.guess_y,
+            ScreenControl.START_X, ScreenControl.GUESS_Y,
             "Make a guess: ", True
         )
 
@@ -267,46 +252,46 @@ class ScreenControl:
         """
         ScreenControl.clearscreen()
         ScreenControl.pos(
-            ScreenControl.start_x,
-            ScreenControl.boardblocktop_y,
-            f"{ScreenControl.framecol + ScreenControl.bright}"
-            + " " * ScreenControl.screenwidth
-            + ScreenControl.resetall,
+            ScreenControl.START_X,
+            ScreenControl.BOARD_BLOCK_TOP_Y,
+            f"{ScreenControl.framecol + ScreenControl.BRIGHT}"
+            + " " * ScreenControl.SCREEN_WIDTH
+            + ScreenControl.RESET_ALL,
         )
         ScreenControl.pos(
-            ScreenControl.start_x,
-            ScreenControl.boardblockbottom_y,
-            f"{ScreenControl.framecol + ScreenControl.bright}"
-            + " " * ScreenControl.screenwidth
-            + ScreenControl.resetall,
+            ScreenControl.START_X,
+            ScreenControl.BOARD_BLOCK_BOTTOM_Y,
+            f"{ScreenControl.framecol + ScreenControl.BRIGHT}"
+            + " " * ScreenControl.SCREEN_WIDTH
+            + ScreenControl.RESET_ALL,
         )
         for x in range(
-            ScreenControl.boardblocktop_y + 1, ScreenControl.boardblockbottom_y
+            ScreenControl.BOARD_BLOCK_TOP_Y + 1, ScreenControl.BOARD_BLOCK_BOTTOM_Y
         ):
             ScreenControl.pos(
-                int(ScreenControl.screenwidth / 2),
+                int(ScreenControl.SCREEN_WIDTH / 2),
                 x,
-                f"{ScreenControl.framecol + ScreenControl.bright}"
-                + f" {ScreenControl.resetall}",
+                f"{ScreenControl.framecol + ScreenControl.BRIGHT}"
+                + f" {ScreenControl.RESET_ALL}",
             )
             ScreenControl.pos(
-                ScreenControl.start_x,
+                ScreenControl.START_X,
                 x,
-                f"{ScreenControl.framecol + ScreenControl.bright}"
-                + f" {ScreenControl.resetall}",
+                f"{ScreenControl.framecol + ScreenControl.BRIGHT}"
+                + f" {ScreenControl.RESET_ALL}",
             )
             ScreenControl.pos(
-                ScreenControl.screenwidth,
+                ScreenControl.SCREEN_WIDTH,
                 x,
-                f"{ScreenControl.framecol + ScreenControl.bright}"
-                + f" {ScreenControl.resetall}",
+                f"{ScreenControl.framecol + ScreenControl.BRIGHT}"
+                + f" {ScreenControl.RESET_ALL}",
             )
 
         ScreenControl.center(
             1,
-            f"{ScreenControl.fgwhite + ScreenControl.bright}"
-            + f"{ScreenControl.underline_on + 'Welcome to Battleships'}"
-            + f"{ScreenControl.underline_off}",
+            f"{ScreenControl.FG_WHITE + ScreenControl.BRIGHT}"
+            + f"{ScreenControl.UNDERLINE_ON + 'Welcome to Battleships'}"
+            + f"{ScreenControl.UNDERLINE_OFF}",
         )
         ScreenControl.center(
             2,

@@ -37,9 +37,9 @@ class Board:
             the screen
         """
         self.screencontrol.printname(
-            f"{ScreenControl.fgcyan + ScreenControl.bright}"
-            + f"{ScreenControl.underline_on}"
-            + f"{self.name + ScreenControl.underline_off}"
+            f"{ScreenControl.FG_CYAN + ScreenControl.BRIGHT}"
+            + f"{ScreenControl.UNDERLINE_ON}"
+            + f"{self.name + ScreenControl.UNDERLINE_OFF}"
         )
 
         # print columnlabel
@@ -53,10 +53,10 @@ class Board:
             for y in self.rows:
                 self.screencontrol.showongrid(
                     [x, y],
-                    f"{ScreenControl.fgyellow + ScreenControl.bright}"
-                    + f"{ScreenControl.empty}{ScreenControl.resetall}",
+                    f"{ScreenControl.FG_YELLOW + ScreenControl.BRIGHT}"
+                    + f"{ScreenControl.empty}{ScreenControl.RESET_ALL}",
                 )
-        print(ScreenControl.resetall)
+        print(ScreenControl.RESET_ALL)
 
     def showships(self):
         """
@@ -64,7 +64,7 @@ class Board:
         """
         for coord in self.ships:
             self.screencontrol.showongrid(coord, ScreenControl.ship)
-        print(ScreenControl.resetall)
+        print(ScreenControl.RESET_ALL)
 
     def makeaguess(self):
         """
