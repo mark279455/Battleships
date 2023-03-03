@@ -1,6 +1,17 @@
+# import logging
+
 from colorama import just_fix_windows_console
 
 just_fix_windows_console()
+
+
+# def setup_logger(name, log_file, level=logging.DEBUG):
+#     # To setup as many loggers as you want
+#     handler = logging.FileHandler(log_file, "w", "utf-8")
+#     logger = logging.getLogger(name)
+#     logger.setLevel(level)
+#     logger.addHandler(handler)
+#     return logger
 
 
 class ScreenControl:
@@ -9,6 +20,8 @@ class ScreenControl:
     -   where to put data on display
     -   what color
     """
+
+    # log = setup_logger("log", "bg.log")
     # foreground:
     BG_BLACK = "\x1b[30m"
     FG_RED = "\x1b[31m"
@@ -65,12 +78,11 @@ class ScreenControl:
     SCREEN_WIDTH = 80
     START_X = 1
 
-
-    framecol = BG_BLUE
-    ship = BG_MAGENTA + BRIGHT + " " + RESET_ALL
-    shellhit = BG_RED + BRIGHT + " " + RESET_ALL
-    shellmiss = BG_YELLOW + " " + RESET_ALL
-    empty = BG_WHITE + BRIGHT + " " + RESET_ALL
+    FRAME_COLOUR = BG_BLUE
+    SHIP = BG_MAGENTA + BRIGHT + " " + RESET_ALL
+    SHELL_HIT = BG_RED + BRIGHT + " " + RESET_ALL
+    SHELL_MIS = BG_YELLOW + " " + RESET_ALL
+    EMPTY = BG_WHITE + BRIGHT + " " + RESET_ALL
 
     def __init__(self, start_y, start_x):
         """
@@ -114,6 +126,41 @@ class ScreenControl:
             f"{ScreenControl.FG_CYAN + ScreenControl.BRIGHT}{columnlabel}",
         )
 
+    def drawframe(self):
+        ScreenControl.pos(
+            ScreenControl.START_X + self.start_x,
+            ScreenControl.BOARD_BLOCK_TOP_Y,
+            f"{ScreenControl.FRAME_COLOUR + ScreenControl.BRIGHT}"
+            + " " * int(ScreenControl.SCREEN_WIDTH / 2)
+            + ScreenControl.RESET_ALL,
+        )
+        ScreenControl.pos(
+            ScreenControl.START_X + self.start_x,
+            ScreenControl.BOARD_BLOCK_BOTTOM_Y,
+            f"{ScreenControl.FRAME_COLOUR + ScreenControl.BRIGHT}"
+            + " " * int(ScreenControl.SCREEN_WIDTH / 2)
+            + ScreenControl.RESET_ALL,
+        )
+        for x in range(
+            ScreenControl.BOARD_BLOCK_TOP_Y + 1,
+            ScreenControl.BOARD_BLOCK_BOTTOM_Y,
+        ):
+            ScreenControl.pos(
+                ScreenControl.START_X + self.start_x,
+                x,
+                f"{ScreenControl.FRAME_COLOUR + ScreenControl.BRIGHT}"
+                + f" {ScreenControl.RESET_ALL}",
+            )
+            ScreenControl.pos(
+                ScreenControl.START_X
+                + self.start_x
+                + int(ScreenControl.SCREEN_WIDTH / 2)
+                - 1,
+                x,
+                f"{ScreenControl.FRAME_COLOUR + ScreenControl.BRIGHT}"
+                + f" {ScreenControl.RESET_ALL}",
+            )
+
     def printrowlabels(self, rowlist):
         """
         position and print the labels for the rows in the players map grid
@@ -124,6 +171,11 @@ class ScreenControl:
                 self.start_y + ScreenControl.GRID_GAP_X + (i * 2),
                 rowlist[i],
             )
+
+    @staticmethod
+    def pause(text):
+        ScreenControl.pos(1, 23, text, True)
+        input("")
 
     @staticmethod
     def clearline(y):
@@ -237,8 +289,7 @@ class ScreenControl:
         position cursor and get guess for player
         """
         ScreenControl.pos(
-            ScreenControl.START_X, ScreenControl.GUESS_Y,
-            "Make a guess: ", True
+            ScreenControl.START_X, ScreenControl.GUESS_Y, "Make a guess: ", True
         )
 
     @staticmethod
@@ -251,42 +302,6 @@ class ScreenControl:
         -   frame
         """
         ScreenControl.clearscreen()
-        ScreenControl.pos(
-            ScreenControl.START_X,
-            ScreenControl.BOARD_BLOCK_TOP_Y,
-            f"{ScreenControl.framecol + ScreenControl.BRIGHT}"
-            + " " * ScreenControl.SCREEN_WIDTH
-            + ScreenControl.RESET_ALL,
-        )
-        ScreenControl.pos(
-            ScreenControl.START_X,
-            ScreenControl.BOARD_BLOCK_BOTTOM_Y,
-            f"{ScreenControl.framecol + ScreenControl.BRIGHT}"
-            + " " * ScreenControl.SCREEN_WIDTH
-            + ScreenControl.RESET_ALL,
-        )
-        for x in range(
-            ScreenControl.BOARD_BLOCK_TOP_Y + 1, ScreenControl.BOARD_BLOCK_BOTTOM_Y
-        ):
-            ScreenControl.pos(
-                int(ScreenControl.SCREEN_WIDTH / 2),
-                x,
-                f"{ScreenControl.framecol + ScreenControl.BRIGHT}"
-                + f" {ScreenControl.RESET_ALL}",
-            )
-            ScreenControl.pos(
-                ScreenControl.START_X,
-                x,
-                f"{ScreenControl.framecol + ScreenControl.BRIGHT}"
-                + f" {ScreenControl.RESET_ALL}",
-            )
-            ScreenControl.pos(
-                ScreenControl.SCREEN_WIDTH,
-                x,
-                f"{ScreenControl.framecol + ScreenControl.BRIGHT}"
-                + f" {ScreenControl.RESET_ALL}",
-            )
-
         ScreenControl.center(
             1,
             f"{ScreenControl.FG_WHITE + ScreenControl.BRIGHT}"
@@ -301,10 +316,10 @@ class ScreenControl:
         ScreenControl.center(
             3, "You can pick a square " + "in either order - eg 'a5' or '3c'"
         )
-        ScreenControl.pos(1, 24, f"ship: {ScreenControl.ship}", True)
-        ScreenControl.pos(21, 24, f"hit:  {ScreenControl.shellhit}", True)
-        ScreenControl.pos(41, 24, f"miss: {ScreenControl.shellmiss}", True)
-        ScreenControl.pos(61, 24, f"????: {ScreenControl.empty}", True)
+        ScreenControl.pos(1, 24, f"ship: {ScreenControl.SHIP}", True)
+        ScreenControl.pos(21, 24, f"hit:  {ScreenControl.SHELL_HIT}", True)
+        ScreenControl.pos(41, 24, f"miss: {ScreenControl.SHELL_MIS}", True)
+        ScreenControl.pos(61, 24, f"????: {ScreenControl.EMPTY}", True)
 
     @staticmethod
     def pos(x_coord, y_coord, text, *nolinefeed):

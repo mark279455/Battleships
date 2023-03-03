@@ -16,7 +16,7 @@ class Board:
     num_ships = 5
 
     def __init__(self, name, start_x):
-        print(f"Board {name}")
+        # print(f"Board {name}")
         self.screencontrol = ScreenControl(5, start_x)
         self.hits = 0
         self.ships = []
@@ -36,6 +36,9 @@ class Board:
             Shows board details for this board through ScreenControl on
             the screen
         """
+        # print frame
+        self.screencontrol.drawframe()
+
         self.screencontrol.printname(
             f"{ScreenControl.FG_CYAN + ScreenControl.BRIGHT}"
             + f"{ScreenControl.UNDERLINE_ON}"
@@ -54,7 +57,7 @@ class Board:
                 self.screencontrol.showongrid(
                     [x, y],
                     f"{ScreenControl.FG_YELLOW + ScreenControl.BRIGHT}"
-                    + f"{ScreenControl.empty}{ScreenControl.RESET_ALL}",
+                    + f"{ScreenControl.EMPTY}{ScreenControl.RESET_ALL}",
                 )
         print(ScreenControl.RESET_ALL)
 
@@ -63,7 +66,7 @@ class Board:
         Shows this boards ships through ScreenControl on the screen.
         """
         for coord in self.ships:
-            self.screencontrol.showongrid(coord, ScreenControl.ship)
+            self.screencontrol.showongrid(coord, ScreenControl.SHIP)
         print(ScreenControl.RESET_ALL)
 
     def makeaguess(self):
@@ -94,12 +97,12 @@ class Board:
             self.screencontrol.printplayermessage(
                 f"{self.name} hit a ship at {guess}"
             )
-            otherboard.screencontrol.showongrid(guess, ScreenControl.shellhit)
+            otherboard.screencontrol.showongrid(guess, ScreenControl.SHELL_HIT)
         else:
             self.screencontrol.printplayermessage(
                 f"{self.name} missed at {guess}"
             )
-            otherboard.screencontrol.showongrid(guess, ScreenControl.shellmiss)
+            otherboard.screencontrol.showongrid(guess, ScreenControl.SHELL_MIS)
         self.screencontrol.updatemoves(len(self.moves))
         self.screencontrol.updatehits(self.hits)
         if self.hits == len(otherboard.ships):
@@ -194,10 +197,11 @@ def startgame(playername):
     sets up display
     shows player and computers boards on display
     """
-    print("129")
+    ScreenControl.setupdisplay()
     playerboard = Board(playername, 0)
     compboard = Board("Computer", 40)
-    ScreenControl.setupdisplay()
+    playerboard.setupboard()
+    compboard.setupboard()
     playerboard.setupboard()
     playerboard.showships()
     compboard.setupboard()
@@ -239,8 +243,11 @@ def main():
     main method
     catches player name and starts game
     """
-    playername = getplayername()
+    # playername = getplayername()
+    playername="Mark"
+    ScreenControl.clearscreen()
     startgame(playername)
+    ScreenControl.pos(1,24, "End")
 
 
 main()
