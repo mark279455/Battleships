@@ -11,6 +11,7 @@ class Board:
     number of hits and misses
     previous moves
     """
+
     startrow = 5
     size = 6
     num_ships = 5
@@ -33,8 +34,8 @@ class Board:
 
     def setupboard(self):
         """
-            Shows board details for this board through ScreenControl on
-            the screen
+        Shows board details for this board through ScreenControl on
+        the screen
         """
         # print frame
         self.screencontrol.drawframe()
@@ -230,12 +231,18 @@ def getplayername():
             break
         else:
             ScreenControl.pos(2, 8, f"You entered an invalid name '{name}'")
-            ScreenControl.pos(2, 10, "We dont mind which name you use but " +
-                              "we are short of screenspace, so")
-            ScreenControl.pos(2, 12, "please use a name less than " +
-                              f"{maxlength} characters.")
+            ScreenControl.pos(
+                2,
+                10,
+                "We dont mind which name you use but "
+                + "we are short of screenspace, so",
+            )
+            ScreenControl.pos(
+                2,
+                12,
+                "please use a name less than " + f"{maxlength} characters.",
+            )
     return name
-
 
 
 def main():
@@ -244,10 +251,10 @@ def main():
     catches player name and starts game
     """
     # playername = getplayername()
-    playername="Mark"
+    playername = "Mark"
     ScreenControl.clearscreen()
     startgame(playername)
-    ScreenControl.pos(1,24, "End")
+    ScreenControl.pos(1, 24, "End")
 
 
 main()

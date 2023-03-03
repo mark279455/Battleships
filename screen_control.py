@@ -109,7 +109,7 @@ class ScreenControl:
         xmoves = [0, 1, 2, 0, 1, 2]
         ymoves = [0, 0, 0, 1, 1, 1]
         for xadd, yadd in zip(xmoves, ymoves):
-            ScreenControl.pos(x+xadd, y+yadd, text)
+            ScreenControl.pos(x + xadd, y + yadd, text)
         print(ScreenControl.RESET_ALL)
 
     def printcolumnlabels(self, columnlist):
