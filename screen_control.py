@@ -106,13 +106,10 @@ class ScreenControl:
             + ScreenControl.GRID_START_Y
             + (int(ScreenControl.let2num(coord[1])) * ScreenControl.GRID_GAP_X)
         )
-
-        ScreenControl.pos(x, y, text)
-        ScreenControl.pos(x + 1, y, text)
-        ScreenControl.pos(x + 2, y, text)
-        ScreenControl.pos(x, y + 1, text)
-        ScreenControl.pos(x + 1, y + 1, text)
-        ScreenControl.pos(x + 2, y + 1, text)
+        xmoves = [0, 1, 2, 0, 1, 2]
+        ymoves = [0, 0, 0, 1, 1, 1]
+        for xadd, yadd in zip(xmoves, ymoves):
+            ScreenControl.pos(x+xadd, y+yadd, text)
         print(ScreenControl.RESET_ALL)
 
     def printcolumnlabels(self, columnlist):
