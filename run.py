@@ -45,7 +45,11 @@ class Board:
             + f"{ScreenControl.UNDERLINE_ON}"
             + f"{self.name + ScreenControl.UNDERLINE_OFF}"
         )
+        # print 'Moves:'
+        self.screencontrol.printmoves()
 
+        # print 'Hits:'
+        self.screencontrol.printhits()
         # print columnlabel
         self.screencontrol.printcolumnlabels(self.columns)
 
@@ -110,7 +114,7 @@ class Board:
             ScreenControl.clearline(24)
             msg = "lose." if self.name.lower() == "computer" else "win."
             ScreenControl.printendgamemessage(
-                f"{self.name} has sunk all of {otherboard.name}'s"
+                f"{self.name} has sunk all of {otherboard.name}'s "
                 + f"ships. - you {msg}"
             )
             ScreenControl.printinfomessage("Play again?")

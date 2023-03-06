@@ -22,60 +22,37 @@ class ScreenControl:
     """
 
     # log = setup_logger("log", "bg.log")
-    # foreground:
-    BG_BLACK = "\x1b[30m"
-    FG_RED = "\x1b[31m"
-    FG_GREEN = "\x1b[32m"
+    # foreground colors:
     FG_YELLOW = "\x1b[33m"
-    FG_BLUE = "\x1b[34m"
-    FG_MAGENTA = "\x1b[35m"
     FG_CYAN = "\x1b[36m"
     FG_WHITE = "\x1b[37m"
-    FG_RESET = "\x1b[39m"
 
-    # background
-    BG_BLACK = "\x1b[40m"
+    # background colors
     BG_RED = "\x1b[41m"
-    BG_GREEN = "\x1b[42m"
     BG_YELLOW = "\x1b[43m"
     BG_BLUE = "\x1b[44m"
     BG_MAGENTA = "\x1b[45m"
-    BG_CYAN = "\x1b[46m"
     BG_WHITE = "\x1b[47m"
-    BG_RESET = "\x1b[49m"
 
     UNDERLINE_ON = "\033[4m"
     UNDERLINE_OFF = "\033[0m"
 
     RESET_ALL = "\x1b[0m"  # reset all (colors and brightness)
     BRIGHT = "\x1b[1m"  # bright
-    DIM = "\x1b[2m"  # dim (looks same as normal brightness)
-    NORMAL = "\x1b[22m"  # normal brightness
 
-    BOARD_BLOCK_BOTTOM_Y = 20
-    BOARD_BLOCK_TOP_Y = 4
-
-    COLUMN_LABEL_X = 18
-    COLUMN_LABEL_Y = 1
-
-    GAME_MESSAGE_Y = 22
-
-    GRID_GAP_X = 2
-    GRID_GAP_Y = 3
+    SCREEN_WIDTH = 80
 
     GRID_START_X = 16
     GRID_START_Y = 2
+    GRID_GAP_X = 2
+    GRID_GAP_Y = 3
 
-    GUESS_Y = 21
     HIT_Y = 6
+
     INFO_MESSAGE_Y = 23
     LABEL_DATA_X = 11
     LABEL_START_X = 4
     MOVE_Y = 4
-    PLAYER_MESSAGE_START_X = 2
-    PLAYER_MESSAGE_Y = 17
-    ROW_LABEL_X = 16
-    SCREEN_WIDTH = 80
     START_X = 1
 
     FRAME_COLOUR = BG_BLUE
@@ -116,31 +93,40 @@ class ScreenControl:
         """
         position and print the labels for the columns in the players map grid
         """
+        column_label_x = 18
+        column_label_y = 1
+
         columnlabel = " ".join([str(i) + " " for i in columnlist])
         ScreenControl.pos(
-            self.start_x + ScreenControl.COLUMN_LABEL_X,
-            self.start_y + ScreenControl.COLUMN_LABEL_Y,
+            self.start_x + column_label_x,
+            self.start_y + column_label_y,
             f"{ScreenControl.FG_CYAN + ScreenControl.BRIGHT}{columnlabel}",
         )
 
     def drawframe(self):
+        """
+        draw the frame around each player's map
+        """
+        board_block_bottom_y = 20
+        board_block_top_y = 4
+
         ScreenControl.pos(
             ScreenControl.START_X + self.start_x,
-            ScreenControl.BOARD_BLOCK_TOP_Y,
+            board_block_top_y,
             f"{ScreenControl.FRAME_COLOUR + ScreenControl.BRIGHT}"
             + " " * int(ScreenControl.SCREEN_WIDTH / 2)
             + ScreenControl.RESET_ALL,
         )
         ScreenControl.pos(
             ScreenControl.START_X + self.start_x,
-            ScreenControl.BOARD_BLOCK_BOTTOM_Y,
+            board_block_bottom_y,
             f"{ScreenControl.FRAME_COLOUR + ScreenControl.BRIGHT}"
             + " " * int(ScreenControl.SCREEN_WIDTH / 2)
             + ScreenControl.RESET_ALL,
         )
         for x in range(
-            ScreenControl.BOARD_BLOCK_TOP_Y + 1,
-            ScreenControl.BOARD_BLOCK_BOTTOM_Y,
+            board_block_top_y + 1,
+            board_block_bottom_y,
         ):
             ScreenControl.pos(
                 ScreenControl.START_X + self.start_x,
@@ -162,9 +148,10 @@ class ScreenControl:
         """
         position and print the labels for the rows in the players map grid
         """
+        row_label_x = 16
         for i in range(len(rowlist)):
             ScreenControl.pos(
-                self.start_x + ScreenControl.ROW_LABEL_X,
+                self.start_x + row_label_x,
                 self.start_y + ScreenControl.GRID_GAP_X + (i * 2),
                 rowlist[i],
             )
@@ -192,11 +179,23 @@ class ScreenControl:
             + f"{ScreenControl.UNDERLINE_ON}"
             + f"{text + ScreenControl.UNDERLINE_OFF}",
         )
+
+    def printmoves(self):
+        """
+        print the moves label under the players name in the correct position
+        on the screen
+        """
         ScreenControl.pos(
             self.start_x + ScreenControl.LABEL_START_X,
             self.start_y + ScreenControl.MOVE_Y,
             "Moves:",
         )
+
+    def printhits(self):
+        """
+        print the hits label under the players name in the correct position
+        on the screen
+        """
         ScreenControl.pos(
             self.start_x + ScreenControl.LABEL_START_X,
             self.start_y + ScreenControl.HIT_Y,
@@ -249,27 +248,28 @@ class ScreenControl:
         """
         print the end of game message
         """
+        game_message_y = 22
+
         ScreenControl.pos(
             ScreenControl.START_X,
-            ScreenControl.GAME_MESSAGE_Y,
+            game_message_y,
             " " * ScreenControl.SCREEN_WIDTH,
         )
         if nolinefeed:
-            ScreenControl.pos(
-                ScreenControl.START_X, ScreenControl.GAME_MESSAGE_Y, text, True
-            )
+            ScreenControl.pos(ScreenControl.START_X, game_message_y, text, True)
         else:
-            ScreenControl.pos(
-                ScreenControl.START_X, ScreenControl.GAME_MESSAGE_Y, text
-            )
+            ScreenControl.pos(ScreenControl.START_X, game_message_y, text)
 
     def printplayermessage(self, text):
         """
         show hit / miss information for the last guess
         """
+        player_message_start_x = 2
+        player_message_start_y = 17
+
         ScreenControl.pos(
-            self.start_x + ScreenControl.PLAYER_MESSAGE_START_X,
-            self.start_y + ScreenControl.PLAYER_MESSAGE_Y,
+            self.start_x + player_message_start_x,
+            self.start_y + player_message_start_y,
             text,
             True,
         )
@@ -285,8 +285,9 @@ class ScreenControl:
         """
         position cursor and get guess for player
         """
+        guess_y = 21
         ScreenControl.pos(
-            ScreenControl.START_X, ScreenControl.GUESS_Y, "Make a guess: ", True
+            ScreenControl.START_X, guess_y, "Make a guess: ", True
         )
 
     @staticmethod
