@@ -120,6 +120,16 @@ The ScreenControl class has static methods to print the heading and the instruct
 
 The two areas surrounded by the blue frames are controlled by instances od the ScreenControl class which define and monitor events that happen during the game.
 
+Testing for the ScreenControl class involved the following....
+
+-       Heading and instructions printed in the correct place. - lines 1 - 3
+-       Key printed in the correct place - line 24
+-       The instance areas were printed in the correct place with the blue frames surrounding them. - lines 4 - 20
+-       make a guess happened on line 21
+-       game status / info messages were printed on line 22
+-       error messages were printed on line 23
+-       Game end messages were printed on line 22
+
 
 ---
 
