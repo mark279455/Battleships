@@ -97,7 +97,8 @@ class Board:
     def processguess(self, guess, otherboard):
         """
         Processes the players validated guess
-        - updates both players displays and checks game over
+        - updates both players displays
+        - detects game over and returns False if it is
         """
         self.moves.append(guess)
         if guess in otherboard.ships:
@@ -114,18 +115,8 @@ class Board:
         self.screencontrol.updatemoves(len(self.moves))
         self.screencontrol.updatehits(self.hits)
         if self.hits == len(otherboard.ships):
-            ScreenControl.clearline(24)
-            msg = "lose." if self.name.lower() == "computer" else "win."
-            ScreenControl.printendgamemessage(
-                f"{self.name} has sunk all of {otherboard.name}'s "
-                + f"ships. - you {msg}"
-            )
-            ScreenControl.printinfomessage("Play again?")
-            ans = input("")
-            if ans.lower().startswith("y"):
-                main()
-            else:
-                quit()
+            return False
+        return True
 
     def makerandomguess(self):
         """
@@ -185,8 +176,8 @@ class Board:
             else:
                 ScreenControl.clearinfomessage()
                 return resultlist
-        except ValueError as e:
-            ScreenControl.printinfomessage(f"{e}, please try again")
+        except ValueError as error:
+            ScreenControl.printinfomessage(f"{error}, please try again")
         return False
 
     @staticmethod
@@ -197,6 +188,22 @@ class Board:
         -   '0' is ascii '48' will be converted to 'a' ascii '97'
         """
         return chr(ord(str(num)) + 49)
+
+    def gameover(self, otherboard):
+        """
+        End of game
+        """
+        ScreenControl.clearline(24)
+        msg = "lose." if self.name.lower() == "computer" else "win."
+        ScreenControl.printendgamemessage(
+            f"{self.name} has sunk all of {otherboard.name}'s " +
+            f"ships. - you {msg}")
+        ScreenControl.printinfomessage("Play again?")
+        ans = input("")
+        if ans.lower().startswith("y"):
+            main()
+        else:
+            quit()
 
 
 def startgame(playername):
@@ -216,9 +223,11 @@ def startgame(playername):
 
     while True:
         validcoord = playerboard.makeaguess()
-        playerboard.processguess(validcoord, compboard)
+        if not playerboard.processguess(validcoord, compboard):
+            playerboard.gameover(compboard)
         validcoord = compboard.makeaguess()
-        compboard.processguess(validcoord, playerboard)
+        if not compboard.processguess(validcoord, playerboard):
+            compboard.gameover(playerboard)
 
 
 def getplayername():
