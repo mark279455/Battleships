@@ -44,9 +44,9 @@ class Board:
         self.screencontrol.drawframe()
 
         self.screencontrol.printname(
-            f"{ScreenControl.FG_CYAN + ScreenControl.BRIGHT}"
-            + f"{ScreenControl.UNDERLINE_ON}"
-            + f"{self.name + ScreenControl.UNDERLINE_OFF}"
+            f"{ScreenControl.FG_CYAN + ScreenControl.BRIGHT}" +
+            f"{ScreenControl.UNDERLINE_ON}" +
+            f"{self.name + ScreenControl.UNDERLINE_OFF}"
         )
         # print 'Moves:'
         self.screencontrol.printmoves()
@@ -84,14 +84,13 @@ class Board:
         validcoord = []
         if self.name.lower().startswith("comp"):
             return self.makerandomguess()
-        else:
-            while True:
-                ScreenControl.clearline(21)
-                self.screencontrol.makeaguess()
-                playerinput = input("")
-                validcoord = self.validateinput(playerinput)
-                if validcoord:
-                    break
+        while True:
+            ScreenControl.clearline(21)
+            self.screencontrol.makeaguess()
+            playerinput = input("")
+            validcoord = self.validateinput(playerinput)
+            if validcoord:
+                break
         return validcoord
 
     def processguess(self, guess, otherboard):
@@ -220,6 +219,7 @@ def startgame(playername):
     playerboard.setupboard()
     playerboard.showships()
     compboard.setupboard()
+    compboard.showships()
 
     while True:
         validcoord = playerboard.makeaguess()
@@ -267,8 +267,8 @@ def main():
     catches player name and starts game
     """
     playername = getplayername()
-    # playername = "Mark"
-    ScreenControl.clearscreen()
+
+    # ScreenControl.clearscreen()
     startgame(playername)
     ScreenControl.pos(1, 24, "End")
 
