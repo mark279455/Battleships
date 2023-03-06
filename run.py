@@ -257,8 +257,8 @@ def main():
     main method
     catches player name and starts game
     """
-    # playername = getplayername()
-    playername = "Mark"
+    playername = getplayername()
+    # playername = "Mark"
     ScreenControl.clearscreen()
     startgame(playername)
     ScreenControl.pos(1, 24, "End")
