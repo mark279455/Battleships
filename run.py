@@ -17,6 +17,9 @@ class Board:
     num_ships = 5
 
     def __init__(self, name, start_x):
+        """
+        Board constructor
+        """
         # print(f"Board {name}")
         self.screencontrol = ScreenControl(5, start_x)
         self.hits = 0
@@ -151,8 +154,8 @@ class Board:
         try:
             if len(playerinput) != 2:
                 raise ValueError(
-                    f"Input is 2 digits, a letter and a "
-                    + f"number - you gave '{playerinput}'"
+                    "Input is 2 digits, a letter and a " +
+                    f"number - you gave '{playerinput}'"
                 )
             else:
                 searchletters = "".join([str(i) for i in self.columns])
@@ -171,8 +174,8 @@ class Board:
                 resultlist = [playerinput[::-1][0], playerinput[::-1][1]]
             else:
                 raise ValueError(
-                    f"input out of range, "
-                    + f"'{playerinput}' is not on the board"
+                    "input out of range, " +
+                    f"'{playerinput}' is not on the board"
                 )
 
             if resultlist in self.moves:

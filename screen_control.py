@@ -1,4 +1,8 @@
+"""
+control the display
+"""
 # import logging
+
 
 from colorama import just_fix_windows_console
 
@@ -158,6 +162,9 @@ class ScreenControl:
 
     @staticmethod
     def pause(text):
+        """
+        pause
+        """
         ScreenControl.pos(1, 23, text, True)
         input("")
 
@@ -256,7 +263,11 @@ class ScreenControl:
             " " * ScreenControl.SCREEN_WIDTH,
         )
         if nolinefeed:
-            ScreenControl.pos(ScreenControl.START_X, game_message_y, text, True)
+            ScreenControl.pos(
+                ScreenControl.START_X,
+                game_message_y,
+                text,
+                True)
         else:
             ScreenControl.pos(ScreenControl.START_X, game_message_y, text)
 
