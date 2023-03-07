@@ -69,14 +69,7 @@ class Board:
         self.screencontrol.printrowlabels(self.rows)
 
         # print map grid
-        for xval in self.columns:
-            for yval in self.rows:
-                self.screencontrol.showongrid(
-                    [xval, yval],
-                    f"{ScreenControl.FG_YELLOW + ScreenControl.BRIGHT}"
-                    + f"{ScreenControl.EMPTY}{ScreenControl.RESET_ALL}",
-                )
-        print(ScreenControl.RESET_ALL)
+        self.screencontrol.printmapgrid(self.rows, self.columns)
 
     def showships(self):
         """

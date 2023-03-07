@@ -115,6 +115,19 @@ class ScreenControl:
             f"{ScreenControl.FG_CYAN + ScreenControl.BRIGHT}{columnlabel}",
         )
 
+    def printmapgrid(self, columns, rows):
+        """
+        print the empty map grid
+        """
+        for xval in columns:
+            for yval in rows:
+                self.screencontrol.showongrid(
+                    [xval, yval],
+                    f"{ScreenControl.FG_YELLOW + ScreenControl.BRIGHT}"
+                    + f"{ScreenControl.EMPTY}{ScreenControl.RESET_ALL}",
+                )
+        print(ScreenControl.RESET_ALL)
+
     def drawframe(self):
         """
         draw the frame around each player's map
