@@ -76,21 +76,29 @@ class ScreenControl:
     def showongrid(self, coord, text):
         """
         position and print data within the players map grid
+        coord is a list e.g. ['3', 'd'] or ['5', 'f']
+        first digit needs to be reduced by 1 - index is 0
+        second digit is a letter which needs conversion to a number
+        let2num converts a to 0, b to 1 etc
+
+        gets a square of 4 squares - as defined by xmoves and ymoves and colors 
+        them all
         """
-        x = (
+        xval = (
             (self.start_x + ScreenControl.GRID_START_X)
             + (int(coord[0]) * ScreenControl.GRID_GAP_Y)
             - 1
         )
-        y = (
+        yval = (
             self.start_y
             + ScreenControl.GRID_START_Y
             + (int(ScreenControl.let2num(coord[1])) * ScreenControl.GRID_GAP_X)
         )
+        # create square from coord
         xmoves = [0, 1, 2, 0, 1, 2]
         ymoves = [0, 0, 0, 1, 1, 1]
         for xadd, yadd in zip(xmoves, ymoves):
-            ScreenControl.pos(x + xadd, y + yadd, text)
+            ScreenControl.pos(xval + xadd, yval + yadd, text)
         print(ScreenControl.RESET_ALL)
 
     def printcolumnlabels(self, columnlist):
@@ -128,13 +136,13 @@ class ScreenControl:
             + " " * int(ScreenControl.SCREEN_WIDTH / 2)
             + ScreenControl.RESET_ALL,
         )
-        for x in range(
+        for xval in range(
             board_block_top_y + 1,
             board_block_bottom_y,
         ):
             ScreenControl.pos(
                 ScreenControl.START_X + self.start_x,
-                x,
+                xval,
                 f"{ScreenControl.FRAME_COLOUR + ScreenControl.BRIGHT}"
                 + f" {ScreenControl.RESET_ALL}",
             )
@@ -143,7 +151,7 @@ class ScreenControl:
                 + self.start_x
                 + int(ScreenControl.SCREEN_WIDTH / 2)
                 - 1,
-                x,
+                xval,
                 f"{ScreenControl.FRAME_COLOUR + ScreenControl.BRIGHT}"
                 + f" {ScreenControl.RESET_ALL}",
             )
@@ -169,11 +177,11 @@ class ScreenControl:
         input("")
 
     @staticmethod
-    def clearline(y):
+    def clearline(yval):
         """
         clear the line on the screen denoted by y
         """
-        ScreenControl.pos(1, y, " " * 80)
+        ScreenControl.pos(1, yval, " " * 80)
 
     def printname(self, text):
         """
@@ -324,9 +332,9 @@ class ScreenControl:
         ScreenControl.center(
             3, "You can pick a square " + "in either order - eg 'a5' or '3c'"
         )
-        printkey()
+        ScreenControl.printkey()
 
-    @staticmethod()
+    @staticmethod
     def printkey():
         """
         prints the key on line 24

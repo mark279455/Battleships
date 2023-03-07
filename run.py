@@ -29,41 +29,50 @@ class Board:
         self.rows = [Board.num2let(i) for i in range(Board.size)]
 
         while len(self.ships) < Board.num_ships:
-            a = random.choice(self.columns)
-            b = random.choice(self.rows)
-            if [a, b] not in self.ships:
-                self.ships.append([a, b])
+            aval = random.choice(self.columns)
+            bval = random.choice(self.rows)
+            if [aval, bval] not in self.ships:
+                self.ships.append([aval, bval])
         self.name = name
 
     def setupboard(self):
         """
-        Shows board details for this board through ScreenControl on
-        the screen
+        Shows board details for this board through ScreenControl on the screen
+
+         the blue frame
+         the Board owners name
+         the word 'Moves:'
+         the word 'Hits:'
+         column labels for the map grid (1 to 6)
+         row labels for the map grid (a to f)
         """
         # print frame
         self.screencontrol.drawframe()
-
+    
+        # print name
         self.screencontrol.printname(
             f"{ScreenControl.FG_CYAN + ScreenControl.BRIGHT}" +
             f"{ScreenControl.UNDERLINE_ON}" +
             f"{self.name + ScreenControl.UNDERLINE_OFF}"
         )
+    
         # print 'Moves:'
         self.screencontrol.printmoves()
 
         # print 'Hits:'
         self.screencontrol.printhits()
-        # print columnlabel
+    
+        # print columnlabel - 1 to 6 over map grid
         self.screencontrol.printcolumnlabels(self.columns)
 
-        # print rowlabel
+        # print rowlabel - a to f beside map grid
         self.screencontrol.printrowlabels(self.rows)
 
-        # print grid
-        for x in self.columns:
-            for y in self.rows:
+        # print map grid
+        for xval in self.columns:
+            for yval in self.rows:
                 self.screencontrol.showongrid(
-                    [x, y],
+                    [xval, yval],
                     f"{ScreenControl.FG_YELLOW + ScreenControl.BRIGHT}"
                     + f"{ScreenControl.EMPTY}{ScreenControl.RESET_ALL}",
                 )
@@ -71,7 +80,8 @@ class Board:
 
     def showships(self):
         """
-        Shows this boards ships through ScreenControl on the screen.
+        Shows this boards ships (self) through ScreenControl on the screen.
+        no return value
         """
         for coord in self.ships:
             self.screencontrol.showongrid(coord, ScreenControl.SHIP)
@@ -105,11 +115,13 @@ class Board:
             self.screencontrol.printplayermessage(
                 f"{self.name} hit a ship at {guess}"
             )
+            ScreenControl.pos(1, 24, f"hit: {guess}")
             otherboard.screencontrol.showongrid(guess, ScreenControl.SHELL_HIT)
         else:
             self.screencontrol.printplayermessage(
                 f"{self.name} missed at {guess}"
             )
+            ScreenControl.pos(1, 24, f"miss: {guess}")
             otherboard.screencontrol.showongrid(guess, ScreenControl.SHELL_MIS)
         self.screencontrol.updatemoves(len(self.moves))
         self.screencontrol.updatehits(self.hits)
@@ -123,9 +135,9 @@ class Board:
         """
         resultlist = []
         while True:
-            x = random.choice(self.columns)
-            y = random.choice(self.rows)
-            resultlist = [x, y]
+            xval = random.choice(self.columns)
+            yval = random.choice(self.rows)
+            resultlist = [xval, yval]
             if resultlist not in self.moves:
                 break
         return resultlist
