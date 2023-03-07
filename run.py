@@ -219,7 +219,7 @@ def startgame(playername):
     playerboard.setupboard()
     playerboard.showships()
     compboard.setupboard()
-    compboard.showships()
+    # compboard.showships()
 
     while True:
         validcoord = playerboard.makeaguess()
@@ -268,7 +268,7 @@ def main():
     """
     playername = getplayername()
 
-    # ScreenControl.clearscreen()
+    ScreenControl.clearscreen()
     startgame(playername)
     ScreenControl.pos(1, 24, "End")
 

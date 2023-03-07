@@ -304,11 +304,10 @@ class ScreenControl:
     @staticmethod
     def setupdisplay():
         """
-        setup the commom display areas
+        setup the common display areas
         -   heading
         -   instructions
-        -   error messages
-        -   frame
+        -   the key - explains colors of squares
         """
         ScreenControl.clearscreen()
         ScreenControl.center(
@@ -325,10 +324,17 @@ class ScreenControl:
         ScreenControl.center(
             3, "You can pick a square " + "in either order - eg 'a5' or '3c'"
         )
-        ScreenControl.pos(1, 24, f"ship: {ScreenControl.SHIP}", True)
-        ScreenControl.pos(21, 24, f"hit:  {ScreenControl.SHELL_HIT}", True)
-        ScreenControl.pos(41, 24, f"miss: {ScreenControl.SHELL_MIS}", True)
-        ScreenControl.pos(61, 24, f"????: {ScreenControl.EMPTY}", True)
+        printkey()
+
+    @staticmethod()
+    def printkey():
+        """
+        prints the key on line 24
+        """
+        ScreenControl.pos(9, 24, f"ship: {ScreenControl.SHIP}", True)
+        ScreenControl.pos(26, 24, f"hit:  {ScreenControl.SHELL_HIT}", True)
+        ScreenControl.pos(43, 24, f"miss: {ScreenControl.SHELL_MIS}", True)
+        ScreenControl.pos(60, 24, f"????: {ScreenControl.EMPTY}", True)
 
     @staticmethod
     def pos(x_coord, y_coord, text, *nolinefeed):
@@ -355,7 +361,7 @@ class ScreenControl:
     @staticmethod
     def center(row, text):
         """
-        position text so that its central in window (80 cols)
+        position text so that its horizontally central in window (80 cols)
         """
         xpos = int((80 - len(text)) / 2)
         ScreenControl.pos(xpos, row, text)
