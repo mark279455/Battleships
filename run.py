@@ -115,13 +115,13 @@ class Board:
             self.screencontrol.printplayermessage(
                 f"{self.name} hit a ship at {guess}"
             )
-            ScreenControl.pos(1, 24, f"hit: {guess}")
+            # ScreenControl.pos(1, 24, f"hit: {guess}")
             otherboard.screencontrol.showongrid(guess, ScreenControl.SHELL_HIT)
         else:
             self.screencontrol.printplayermessage(
                 f"{self.name} missed at {guess}"
             )
-            ScreenControl.pos(1, 24, f"miss: {guess}")
+            # ScreenControl.pos(1, 24, f"miss: {guess}")
             otherboard.screencontrol.showongrid(guess, ScreenControl.SHELL_MIS)
         self.screencontrol.updatemoves(len(self.moves))
         self.screencontrol.updatehits(self.hits)
