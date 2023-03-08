@@ -1,97 +1,99 @@
 """
 control the display
 """
-# import logging
-
+import logging
 
 from colorama import just_fix_windows_console
 
 just_fix_windows_console()
 
 
-# def setup_logger(name, log_file, level=logging.DEBUG):
-#     # To setup as many loggers as you want
-#     handler = logging.FileHandler(log_file, "w", "utf-8")
-#     logger = logging.getLogger(name)
-#     logger.setLevel(level)
-#     logger.addHandler(handler)
-#     return logger
+def setup_logger(name, log_file, level=logging.DEBUG):
+    # To setup as many loggers as you want
+    handler = logging.FileHandler(log_file, "w", "utf-8")
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+    return logger
 
 
 class ScreenControl:
     """
-    Controls all display elements
+        Controls all display elements
     -   where to put data on display
     -   what color
     """
 
-    # log = setup_logger("log", "bg.log")
+    log = setup_logger("log", "bg.log")
     # foreground colors:
     FG_YELLOW = "\x1b[33m"
     FG_CYAN = "\x1b[36m"
     FG_WHITE = "\x1b[37m"
-
     # background colors
     BG_RED = "\x1b[41m"
     BG_YELLOW = "\x1b[43m"
     BG_BLUE = "\x1b[44m"
     BG_MAGENTA = "\x1b[45m"
     BG_WHITE = "\x1b[47m"
-
     UNDERLINE_ON = "\033[4m"
     UNDERLINE_OFF = "\033[0m"
-
     RESET_ALL = "\x1b[0m"  # reset all (colors and brightness)
     BRIGHT = "\x1b[1m"  # bright
 
     SCREEN_WIDTH = 80
-
-    GRID_START_X = 16
-    GRID_START_Y = 2
     GRID_GAP_X = 2
     GRID_GAP_Y = 3
-
-    HIT_Y = 6
-
     INFO_MESSAGE_Y = 23
-    LABEL_DATA_X = 11
-    LABEL_START_X = 4
-    MOVE_Y = 4
     START_X = 1
 
-    FRAME_COLOUR = BG_BLUE
     SHIP = BG_MAGENTA + BRIGHT + " " + RESET_ALL
     SHELL_HIT = BG_RED + BRIGHT + " " + RESET_ALL
     SHELL_MIS = BG_YELLOW + " " + RESET_ALL
     EMPTY = BG_WHITE + BRIGHT + " " + RESET_ALL
 
-    def __init__(self, start_y, start_x):
+    def __init__(self, start_y, start_x, name):
         """
         Constructor
         -   defines start position of the players area
+
+        :param start_y:
+        start vertical position for the instances game
+        :param start_x:
+        start horizontal position for the instances game
+         :param name:
+         name of player or "Computer"
         """
+        self.name = name
         self.start_y = start_y
         self.start_x = start_x
 
     def showongrid(self, coord, text):
         """
         position and print data within the players map grid
-        coord is a list e.g. ['3', 'd'] or ['5', 'f']
         first digit needs to be reduced by 1 - index is 0
         second digit is a letter which needs conversion to a number
         let2num converts a to 0, b to 1 etc
 
-        gets a square of 4 squares - as defined by xmoves and ymoves and colors 
+        gets a square of 4 squares - as defined by xmoves and ymoves and colors
         them all
+
+        :param coord:
+        coord is a list e.g. ['3', 'd'] or ['5', 'f']
+        :param text:
+        the character to print
+        :return:
+        nothing
         """
+        grid_start_x = 16
+        grid_start_y = 2
         xval = (
-            (self.start_x + ScreenControl.GRID_START_X)
+            (self.start_x + grid_start_x)
             + (int(coord[0]) * ScreenControl.GRID_GAP_Y)
             - 1
         )
         yval = (
             self.start_y
-            + ScreenControl.GRID_START_Y
+            + grid_start_y
             + (int(ScreenControl.let2num(coord[1])) * ScreenControl.GRID_GAP_X)
         )
         # create square from coord
@@ -101,10 +103,46 @@ class ScreenControl:
             ScreenControl.pos(xval + xadd, yval + yadd, text)
         print(ScreenControl.RESET_ALL)
 
+    def printrowlabels(self, rowlist):
+        """
+        position and print the labels for the rows in the players map grid
+        these are printed down the screen so multiple calls to pos() are
+        required
+        :param rowlist:
+        the Board objects list of row names
+        ['a', 'b', 'c', 'd', 'e', 'f']
+        :return:
+        nothing
+        """
+        ScreenControl.log.debug(f"rowlist: {rowlist}")
+        row_label_x = 16
+        for i in range(len(rowlist)):
+            ScreenControl.log.debug(
+                f"i = {i} i * 2 =  {i * 2} self.start_x = {self.start_x} row_label_x = {row_label_x}"
+            )
+            ScreenControl.log.debug(
+                f"printrowlabels {self.name} at self.start_y = {self.start_y} ScreenControl.GRID_GAP_X = {ScreenControl.GRID_GAP_X}"
+            )
+            ScreenControl.log.debug(
+                f"printrowlabels {self.name} at {self.start_x + row_label_x}, {self.start_y + ScreenControl.GRID_GAP_X + (i * 2)}, {rowlist[i]}"
+            )
+            ScreenControl.pos(
+                self.start_x + row_label_x,
+                self.start_y + ScreenControl.GRID_GAP_X + (i * 2),
+                # self.start_y + ScreenControl.GRID_GAP_Y,
+                rowlist[i],
+            )
+
     def printcolumnlabels(self, columnlist):
         """
         position and print the labels for the columns in the players map grid
+        :param columnlist:
+        the Board objects list of column names
+        ['1', '2', '3', '4', '5', '6']
+        :return:
+        nothing
         """
+        ScreenControl.log.debug(f"columnlist: {columnlist}")
         column_label_x = 18
         column_label_y = 1
 
@@ -115,48 +153,38 @@ class ScreenControl:
             f"{ScreenControl.FG_CYAN + ScreenControl.BRIGHT}{columnlabel}",
         )
 
-    def printmapgrid(self, columns, rows):
-        """
-        print the empty map grid
-        """
-        for xval in columns:
-            for yval in rows:
-                self.screencontrol.showongrid(
-                    [xval, yval],
-                    f"{ScreenControl.FG_YELLOW + ScreenControl.BRIGHT}"
-                    + f"{ScreenControl.EMPTY}{ScreenControl.RESET_ALL}",
-                )
-        print(ScreenControl.RESET_ALL)
-
     def drawframe(self):
         """
         draw the frame around each player's map
+        :return:
+        nothing
         """
-        board_block_bottom_y = 20
-        board_block_top_y = 4
+        frame_color = ScreenControl.BG_BLUE
+        frame_bottom_y = 20
+        frame_top_y = 4
 
         ScreenControl.pos(
             ScreenControl.START_X + self.start_x,
-            board_block_top_y,
-            f"{ScreenControl.FRAME_COLOUR + ScreenControl.BRIGHT}"
+            frame_top_y,
+            f"{frame_color + ScreenControl.BRIGHT}"
             + " " * int(ScreenControl.SCREEN_WIDTH / 2)
             + ScreenControl.RESET_ALL,
         )
         ScreenControl.pos(
             ScreenControl.START_X + self.start_x,
-            board_block_bottom_y,
-            f"{ScreenControl.FRAME_COLOUR + ScreenControl.BRIGHT}"
+            frame_bottom_y,
+            f"{frame_color + ScreenControl.BRIGHT}"
             + " " * int(ScreenControl.SCREEN_WIDTH / 2)
             + ScreenControl.RESET_ALL,
         )
-        for xval in range(
-            board_block_top_y + 1,
-            board_block_bottom_y,
+        for yval in range(
+            frame_top_y + 1,
+            frame_bottom_y,
         ):
             ScreenControl.pos(
                 ScreenControl.START_X + self.start_x,
-                xval,
-                f"{ScreenControl.FRAME_COLOUR + ScreenControl.BRIGHT}"
+                yval,
+                f"{frame_color + ScreenControl.BRIGHT}"
                 + f" {ScreenControl.RESET_ALL}",
             )
             ScreenControl.pos(
@@ -164,21 +192,9 @@ class ScreenControl:
                 + self.start_x
                 + int(ScreenControl.SCREEN_WIDTH / 2)
                 - 1,
-                xval,
-                f"{ScreenControl.FRAME_COLOUR + ScreenControl.BRIGHT}"
+                yval,
+                f"{frame_color + ScreenControl.BRIGHT}"
                 + f" {ScreenControl.RESET_ALL}",
-            )
-
-    def printrowlabels(self, rowlist):
-        """
-        position and print the labels for the rows in the players map grid
-        """
-        row_label_x = 16
-        for i in range(len(rowlist)):
-            ScreenControl.pos(
-                self.start_x + row_label_x,
-                self.start_y + ScreenControl.GRID_GAP_X + (i * 2),
-                rowlist[i],
             )
 
     @staticmethod
@@ -193,15 +209,24 @@ class ScreenControl:
     def clearline(yval):
         """
         clear the line on the screen denoted by y
+        :param yval:
+        the number of the line to be cleared
+        :return:
+        nothing
         """
         ScreenControl.pos(1, yval, " " * 80)
 
     def printname(self, text):
         """
         print the players name in the correct position on the screen
+        :param text:
+        the players name amd its color formatting codes
+        :return:
+        nothing
         """
+        name_start_x = 4
         ScreenControl.pos(
-            self.start_x + ScreenControl.LABEL_START_X,
+            self.start_x + name_start_x,
             self.start_y,
             f"{ScreenControl.FG_CYAN + ScreenControl.BRIGHT}"
             + f"{ScreenControl.UNDERLINE_ON}"
@@ -212,10 +237,14 @@ class ScreenControl:
         """
         print the moves label under the players name in the correct position
         on the screen
+        :return:
+        nothing
         """
+        moves_start_x = 4
+        moves_start_y = 4
         ScreenControl.pos(
-            self.start_x + ScreenControl.LABEL_START_X,
-            self.start_y + ScreenControl.MOVE_Y,
+            self.start_x + moves_start_x,
+            self.start_y + moves_start_y,
             "Moves:",
         )
 
@@ -223,30 +252,46 @@ class ScreenControl:
         """
         print the hits label under the players name in the correct position
         on the screen
+        :return:
+        nothing
         """
+        hits_start_x = 4
+        hits_start_y = 6
         ScreenControl.pos(
-            self.start_x + ScreenControl.LABEL_START_X,
-            self.start_y + ScreenControl.HIT_Y,
+            self.start_x + hits_start_x,
+            self.start_y + hits_start_y,
             "Hits:",
         )
 
     def updatemoves(self, text):
         """
         update the number of moves on the screen
+        :param text:
+        the number to update moves to
+        :return:
+        nothing
         """
+        move_data_x = 11
+        move_data_y = 4
         ScreenControl.pos(
-            self.start_x + ScreenControl.LABEL_DATA_X,
-            self.start_y + ScreenControl.MOVE_Y,
+            self.start_x + move_data_x,
+            self.start_y + move_data_y,
             text,
         )
 
     def updatehits(self, text):
         """
         update the number of hits on the screen
+        :param text:
+        the number to update hits to
+        :return:
+        nothing
         """
+        hits_data_x = 11
+        hits_data_y = 6
         ScreenControl.pos(
-            self.start_x + ScreenControl.LABEL_DATA_X,
-            self.start_y + ScreenControl.HIT_Y,
+            self.start_x + hits_data_x,
+            self.start_y + hits_data_y,
             text,
         )
 
@@ -254,6 +299,10 @@ class ScreenControl:
     def printinfomessage(text):
         """
         show error messages from invalid guesses
+        :param text:
+        the error message
+        :return:
+        nothing
         """
         ScreenControl.clearinfomessage()
         ScreenControl.pos(
@@ -264,6 +313,8 @@ class ScreenControl:
     def clearinfomessage():
         """
         remove the error message from the screen
+        :return:
+        nothing
         """
         ScreenControl.pos(
             ScreenControl.START_X,
@@ -284,17 +335,17 @@ class ScreenControl:
             " " * ScreenControl.SCREEN_WIDTH,
         )
         if nolinefeed:
-            ScreenControl.pos(
-                ScreenControl.START_X,
-                game_message_y,
-                text,
-                True)
+            ScreenControl.pos(ScreenControl.START_X, game_message_y, text, True)
         else:
             ScreenControl.pos(ScreenControl.START_X, game_message_y, text)
 
     def printplayermessage(self, text):
         """
         show hit / miss information for the last guess
+        :param text:
+        the information
+        :return:
+        nothing
         """
         player_message_start_x = 2
         player_message_start_y = 17
@@ -306,16 +357,18 @@ class ScreenControl:
             True,
         )
 
-    def clearplayermessage(self):
-        """
-        clear hit / miss information
-        """
-        print("clearplayermessage 225")
+    # def clearplayermessage(self):
+    #     """
+    #     clear hit / miss information
+    #     """
+    #     print("clearplayermessage 225")
 
     @staticmethod
     def makeaguess():
         """
         position cursor and get guess for player
+        :return:
+        nothing
         """
         guess_y = 21
         ScreenControl.pos(
@@ -329,6 +382,8 @@ class ScreenControl:
         -   heading
         -   instructions
         -   the key - explains colors of squares
+        :return:
+        nothing
         """
         ScreenControl.clearscreen()
         ScreenControl.center(
@@ -351,6 +406,8 @@ class ScreenControl:
     def printkey():
         """
         prints the key on line 24
+        :return:
+        nothing
         """
         ScreenControl.pos(9, 24, f"ship: {ScreenControl.SHIP}", True)
         ScreenControl.pos(26, 24, f"hit:  {ScreenControl.SHELL_HIT}", True)
@@ -366,6 +423,17 @@ class ScreenControl:
 
         move to x,y and print text
         set nolinefeed to true for subsequest input statement
+
+        :param x_coord:
+        horizontal coordinate
+        :param y_coord:
+        vertical coordinate
+        :param text:
+        text to be printed
+        :param nolinefeed:
+        optional - for input statements
+        :return:
+        nothing
         """
         if nolinefeed:
             print(f"\x1b[{y_coord};{x_coord}H{text}", end="")
@@ -376,6 +444,8 @@ class ScreenControl:
     def clearscreen():
         """
         Clears the screen
+        :return:
+        nothing
         """
         print("\x1b[2J")
 
@@ -383,6 +453,12 @@ class ScreenControl:
     def center(row, text):
         """
         position text so that its horizontally central in window (80 cols)
+        :param row:
+        line to center on
+        :param text:
+        text to center
+        :return:
+        nothing
         """
         xpos = int((80 - len(text)) / 2)
         ScreenControl.pos(xpos, row, text)
@@ -393,5 +469,13 @@ class ScreenControl:
         Converts letters to numbers
         -   ascii code of str(number) - 49
         -   'b' is ascii '98' will be converted to '1' ascii '49'
+        format:
+            input - one of   ['a', 'b', 'c', 'd', 'e', 'f']
+            output  - one of ['0', '1', '2', '3', '4', '5']
+
+        :param let:
+        any letter (English alphabet) - only 1 char used here
+        :return:
+        returns the corresponding number as string
         """
         return chr(ord(str(let)) - 49)

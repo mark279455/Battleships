@@ -21,47 +21,49 @@ class Board:
         Board constructor
         """
         # print(f"Board {name}")
-        self.screencontrol = ScreenControl(5, start_x)
+        self.name = name
+        self.screencontrol = ScreenControl(5, start_x, self.name)
         self.hits = 0
         self.ships = []
         self.moves = []
         self.columns = [str(i) for i in range(1, self.size + 1)]
         self.rows = [Board.num2let(i) for i in range(Board.size)]
 
+        ScreenControl.log.debug(f"self.columns = {self.columns}")
+        ScreenControl.log.debug(f"self.rows    = {self.rows}")
+
         while len(self.ships) < Board.num_ships:
             aval = random.choice(self.columns)
             bval = random.choice(self.rows)
             if [aval, bval] not in self.ships:
                 self.ships.append([aval, bval])
-        self.name = name
 
     def setupboard(self):
         """
         Shows board details for this board through ScreenControl on the screen
 
-         the blue frame
-         the Board owners name
-         the word 'Moves:'
-         the word 'Hits:'
-         column labels for the map grid (1 to 6)
-         row labels for the map grid (a to f)
+        the blue frame
+        the Board owners name
+        the word 'Moves:'
+        the word 'Hits:'
+        column labels for the map grid (1 to 6)
+        row labels for the map grid (a to f)
         """
-        # print frame
         self.screencontrol.drawframe()
-    
+
         # print name
         self.screencontrol.printname(
-            f"{ScreenControl.FG_CYAN + ScreenControl.BRIGHT}" +
-            f"{ScreenControl.UNDERLINE_ON}" +
-            f"{self.name + ScreenControl.UNDERLINE_OFF}"
+            f"{ScreenControl.FG_CYAN + ScreenControl.BRIGHT}"
+            + f"{ScreenControl.UNDERLINE_ON}"
+            + f"{self.name + ScreenControl.UNDERLINE_OFF}"
         )
-    
+
         # print 'Moves:'
         self.screencontrol.printmoves()
 
         # print 'Hits:'
         self.screencontrol.printhits()
-    
+
         # print columnlabel - 1 to 6 over map grid
         self.screencontrol.printcolumnlabels(self.columns)
 
@@ -69,7 +71,14 @@ class Board:
         self.screencontrol.printrowlabels(self.rows)
 
         # print map grid
-        self.screencontrol.printmapgrid(self.rows, self.columns)
+        for xval in self.columns:
+            for yval in self.rows:
+                self.screencontrol.showongrid(
+                    [xval, yval],
+                    f"{ScreenControl.FG_YELLOW + ScreenControl.BRIGHT}"
+                    + f"{ScreenControl.EMPTY}{ScreenControl.RESET_ALL}",
+                )
+        print(ScreenControl.RESET_ALL)
 
     def showships(self):
         """
@@ -83,6 +92,8 @@ class Board:
     def makeaguess(self):
         """
         Takes the players guess through ScreenControl on the screen.
+        :return:
+        returns validated input from user in form of ['letter', 'number']
         """
         validcoord = []
         if self.name.lower().startswith("comp"):
@@ -101,8 +112,17 @@ class Board:
         Processes the players validated guess
         - updates both players displays
         - detects game over and returns False if it is
+
+        :param guess:
+            the target coordinate of the guess
+        :param otherboard:
+            the other board - to check its ships' locations
+        :return:
+            returns false if game is over - all otherboards ships sunk
+            else true
         """
         self.moves.append(guess)
+        ScreenControl.log.debug(f"self.moves = {self.moves}")
         if guess in otherboard.ships:
             self.hits += 1
             self.screencontrol.printplayermessage(
@@ -125,6 +145,9 @@ class Board:
     def makerandomguess(self):
         """
         Generates a random guess for the computer
+
+        :return:
+            returns guess if its not in self.moves - i.e. been already targeted
         """
         resultlist = []
         while True:
@@ -143,46 +166,91 @@ class Board:
         -   letter is between a and f
         -   number between 1 and 6
         -   player hasnt targetted this square before
+
+        :param playerinput:
+            typed input from the player
+        :return:
+            returns a succesfully verified list e.g. ['4', 'd']
+            or false if unverified
         """
-        resultlist = []
+        # resultlist = []
         playerinput = playerinput.strip().lower()
         try:
-            if len(playerinput) != 2:
-                raise ValueError(
-                    "Input is 2 digits, a letter and a " +
-                    f"number - you gave '{playerinput}'"
-                )
-            else:
-                searchletters = "".join([str(i) for i in self.columns])
-                searchnumbers = "".join([str(i) for i in self.rows])
-                letnum = re.search(
-                    "^[" + searchletters + "][" + searchnumbers + "]$",
-                    playerinput,
-                )
-                numlet = re.search(
-                    "^[" + searchnumbers + "][" + searchletters + "]$",
-                    playerinput,
-                )
-            if letnum is not None:
-                resultlist = [playerinput[0], playerinput[1]]
-            elif numlet is not None:
-                resultlist = [playerinput[::-1][0], playerinput[::-1][1]]
-            else:
-                raise ValueError(
-                    "input out of range, " +
-                    f"'{playerinput}' is not on the board"
-                )
-
-            if resultlist in self.moves:
-                raise ValueError(
-                    f"Coordinate {playerinput} has already been targeted"
-                )
-            else:
-                ScreenControl.clearinfomessage()
-                return resultlist
+            if Board.validatelength2(playerinput):
+                resultlist = self.validateinputasletnum(playerinput)
+                if resultlist:
+                    self.validateinputasalready(resultlist)
+                    return resultlist
         except ValueError as error:
+            # ScreenControl.printinfomessage(f"{error}, please try again")
             ScreenControl.printinfomessage(f"{error}, please try again")
         return False
+
+    @staticmethod
+    def validatelength2(inputdata):
+        """
+        called from validateinput with the players guess as a string
+        :param inputdata:
+            the players guess - could be anything at this point
+        :return:
+            returns true is length = 2
+            otherwise throws valueerror
+        """
+        if len(inputdata) != 2:
+            raise ValueError(
+                "Input is 2 digits, a letter and a "
+                + f"number - you gave '{inputdata}'"
+            )
+        else:
+            return True
+
+    def validateinputasletnum(self, inputdata):
+        """
+        called from validateinput with the players guess as a string
+        uses regex to test if its within the map grid.
+        :param inputdata:
+        the players guess - is 2 chars at this point
+        :return:
+            returns the successfully validated result in the form ['4', 'd']
+            or throws valueerror
+        """
+        searchletters = "".join([str(i) for i in self.columns])
+        searchnumbers = "".join([str(i) for i in self.rows])
+        letnum = re.search(
+            "^[" + searchletters + "][" + searchnumbers + "]$",
+            inputdata,
+        )
+        numlet = re.search(
+            "^[" + searchnumbers + "][" + searchletters + "]$",
+            inputdata,
+        )
+        if letnum is not None:
+            resultlist = [inputdata[0], inputdata[1]]
+        elif numlet is not None:
+            resultlist = [inputdata[::-1][0], inputdata[::-1][1]]
+        else:
+            raise ValueError(
+                "Input out of range, " + f"'{inputdata}' is not on the board"
+            )
+        return resultlist
+
+    def validateinputasalready(self, inputdata):
+        """
+        validates if the inputdata list is an already targeted coordinate
+        :param inputdata:
+        the coordinate in question
+        :return:
+        returns inputdata if validated
+        value error if previously targeted
+        """
+        if inputdata in self.moves:
+            raise ValueError(
+                "Coordinate "
+                + f"{inputdata[0] + inputdata[1]} has already been targeted"
+            )
+        else:
+            ScreenControl.clearinfomessage()
+            return inputdata
 
     @staticmethod
     def num2let(num):
@@ -190,18 +258,32 @@ class Board:
         Converts numbers to letters
         -   ascii code of str(number) + 49
         -   '0' is ascii '48' will be converted to 'a' ascii '97'
+        format:
+            input - one of   ['0', '1', '2', '3', '4', '5']
+            output  - one of ['a', 'b', 'c', 'd', 'e', 'f']
+        :param num:
+        any digit - only 1 digit used here
+        :return:
+        returns the corresponding letter
         """
         return chr(ord(str(num)) + 49)
 
     def gameover(self, otherboard):
         """
         End of game
+
+        :param otherboard:
+            to populate the string
+        :return: nothing returned
+        either quits
+        or restarts game
         """
         ScreenControl.clearline(24)
         msg = "lose." if self.name.lower() == "computer" else "win."
         ScreenControl.printendgamemessage(
-            f"{self.name} has sunk all of {otherboard.name}'s " +
-            f"ships. - you {msg}")
+            f"{self.name} has sunk all of {otherboard.name}'s "
+            + f"ships. - you {msg}"
+        )
         ScreenControl.printinfomessage("Play again?")
         ans = input("")
         if ans.lower().startswith("y"):
@@ -215,16 +297,20 @@ def startgame(playername):
     creates boards for player and computer
     sets up display
     shows player and computers boards on display
+
+    :param playername:
+    so that the player name appears in the game
+    the computer is always "Computer"
+    :return:
+    nothing returned - game will be restarted or quit
     """
     ScreenControl.setupdisplay()
     playerboard = Board(playername, 0)
     compboard = Board("Computer", 40)
     playerboard.setupboard()
     compboard.setupboard()
-    playerboard.setupboard()
     playerboard.showships()
-    compboard.setupboard()
-    # compboard.showships()
+    compboard.showships()
 
     while True:
         validcoord = playerboard.makeaguess()
@@ -240,6 +326,8 @@ def getplayername():
     ask for player name
     verify its length is > 0
     and less than 15
+    :return:
+    the players inputted name
     """
     maxlength = 15
     ScreenControl.clearscreen()
@@ -248,7 +336,7 @@ def getplayername():
         ScreenControl.clearline(5)
         ScreenControl.pos(2, 5, "", True)
         name = input("Please enter your name ")
-        if len(name) > 0 and len(name) < maxlength:
+        if 0 < len(name) < maxlength:
             break
         else:
             ScreenControl.pos(2, 8, f"You entered an invalid name '{name}'")
