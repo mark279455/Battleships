@@ -10,7 +10,19 @@ The GitHub repository:
 
 ![Techsini](documentation/testing/techsini.png)
 
-## How To Play
+## Contents
+* [Instructions](#Instructions)
+* [Features](#Features)
+* [Possible Development](#Possible-Development)
+* [Design and Implementation](#Design-and-Implementation)
+* [Technologies Used](#Technologies-Used)
+* [Testing](#Testing)
+* [Deployment](#Deployment)
+* [Credits](#Credits)
+
+---
+
+## Instructions
 
 This is a game that I'm sure we all played as children.
 
@@ -21,6 +33,13 @@ Players then make guesses in turns as to where their opponents ships are, and fi
 The person that 'sinks' all their opponents ships first is the winner.
 
 [Wikipedia Battleships](https://en.wikipedia.org/wiki/Battleship_(game))
+
+When the boards load you will see your ships on the left, and the computer's on the right.
+
+you select your target square by keying the name of the square - one number (1-6) and 1 letter (a-f).
+
+Input is valid no matter which order is used.
+
 
 ---
 
@@ -63,13 +82,16 @@ g.      Error messages are shown if input validation fails. Errors are shown if.
 h.      Scores and moves are maintained by the game
 ![MovesScores](documentation/game/moves_scores.png)
 
-## Future Development
+---
+
+## Possible Development
 
 Possible developments could be...
 -       Different shaped ships - not just one square
 -       The player chooses how big the screen is, and how many ships are used. (This is difficult on the Heroku Python platform as there is very limited space)
 
-
+---
+## Design and Implementation
 
 ## Data Model
 
@@ -82,7 +104,7 @@ It is recommended that logging is implemented for development in this project, a
 ---
 
 ## Testing
-
+---
 ### Board Class
 
 The Board class has been tested with a PEP8 linter without issue.
@@ -236,5 +258,14 @@ Flowcharts provided for game logic.
 ![During Game](documentation/testing/battleships_flow_2.jpg)
 
 
+---
+## Technologies Used
+* [Testing](#Testing)
+
+--- 
+## Deployment
+
+---
+## Credits
 
 
