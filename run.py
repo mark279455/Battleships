@@ -30,9 +30,6 @@ class Board:
         self.columns = [str(i) for i in range(1, self.size + 1)]
         self.rows = [Board.num2let(i) for i in range(Board.size)]
 
-        # ScreenControl.log.debug(f"self.columns = {self.columns}")
-        # ScreenControl.log.debug(f"self.rows    = {self.rows}")
-
         while len(self.ships) < Board.num_ships:
             aval = random.choice(self.columns)
             bval = random.choice(self.rows)
@@ -84,7 +81,8 @@ class Board:
     def showships(self):
         """
         Shows this boards ships (self) through ScreenControl on the screen.
-        no return value
+        :return:            nothing
+
         """
         for coord in self.ships:
             self.screencontrol.showongrid(coord, ScreenControl.SHIP)
@@ -93,8 +91,8 @@ class Board:
     def makeaguess(self):
         """
         Takes the players guess through ScreenControl on the screen.
-        :return:
-        returns validated input from user in form of ['letter', 'number']
+        :return:        returns validated input from user in form
+            of ['letter', 'number']
         """
         validcoord = []
         if self.name.lower().startswith("comp"):
@@ -108,14 +106,16 @@ class Board:
                 break
         return validcoord
 
-    def shellinair(self):
-        ScreenControl.log.debug(f"{self.name} shellinair")
-        text = "Shell in the air...."
+    def shellfired(self):
+        """
+        prints shell fired and pauses for 2 secs
+        :return:            nothing
+        """
         self.screencontrol.printplayermessage(
             ScreenControl.BG_RED
             + ScreenControl.FG_YELLOW
             + ScreenControl.BRIGHT
-            + f"Shell in the air....{ScreenControl.RESET_ALL}"
+            + f"Shell Fired....{ScreenControl.RESET_ALL}"
             + (" " * 18)
         )
         time.sleep(2)
@@ -126,17 +126,13 @@ class Board:
         - updates both players displays
         - detects game over and returns False if it is
 
-        :param guess:
-            the target coordinate of the guess
-        :param otherboard:
-            the other board - to check its ships' locations
-        :return:
-            returns false if game is over - all otherboards ships sunk
-            else true
+        :param guess:   the target coordinate of the guess
+        :param otherboard:  the other board - to check its ships' locations
+        :return:    returns false if game is over - all otherboards ships sunk
+                    else true
         """
         self.moves.append(guess)
-        # ScreenControl.log.debug(f"self.moves = {self.moves}")
-        self.shellinair()
+        self.shellfired()
         if guess in otherboard.ships:
             self.hits += 1
             self.screencontrol.printplayermessage(
@@ -162,9 +158,8 @@ class Board:
     def makerandomguess(self):
         """
         Generates a random guess for the computer
-
-        :return:
-            returns guess if its not in self.moves - i.e. been already targeted
+        :return:    returns guess if its not in self.moves
+                    i.e. been already targeted
         """
         resultlist = []
         while True:
@@ -184,11 +179,9 @@ class Board:
         -   number between 1 and 6
         -   player hasnt targetted this square before
 
-        :param playerinput:
-            typed input from the player
-        :return:
-            returns a succesfully verified list e.g. ['4', 'd']
-            or false if unverified
+        :param playerinput:     typed input from the player
+        :return:    returns a succesfully verified list e.g. ['4', 'd']
+                    or false if unverified
         """
         # resultlist = []
         playerinput = playerinput.strip().lower()
@@ -207,11 +200,10 @@ class Board:
     def validatelength2(inputdata):
         """
         called from validateinput with the players guess as a string
-        :param inputdata:
-            the players guess - could be anything at this point
-        :return:
-            returns true is length = 2
-            otherwise throws valueerror
+        :param inputdata:   the players guess
+                            could be anything at this point
+        :return:        returns true is length = 2
+                        otherwise throws valueerror with error message
         """
         if len(inputdata) != 2:
             raise ValueError(
@@ -225,11 +217,10 @@ class Board:
         """
         called from validateinput with the players guess as a string
         uses regex to test if its within the map grid.
-        :param inputdata:
-        the players guess - is 2 chars at this point
-        :return:
-            returns the successfully validated result in the form ['4', 'd']
-            or throws valueerror
+        :param inputdata:   the players guess - is 2 chars at this point
+        :return:        returns the successfully validated result
+                            in the form ['4', 'd']
+                        or throws valueerror with error message
         """
         searchletters = "".join([str(i) for i in self.columns])
         searchnumbers = "".join([str(i) for i in self.rows])
@@ -254,11 +245,9 @@ class Board:
     def validateinputasalready(self, inputdata):
         """
         validates if the inputdata list is an already targeted coordinate
-        :param inputdata:
-        the coordinate in question
-        :return:
-        returns inputdata if validated
-        value error if previously targeted
+        :param inputdata:   the coordinate in question
+        :return:        returns inputdata if validated
+                        value error with error message if previously targeted
         """
         if inputdata in self.moves:
             raise ValueError(
@@ -278,10 +267,8 @@ class Board:
         format:
             input - one of   ['0', '1', '2', '3', '4', '5']
             output  - one of ['a', 'b', 'c', 'd', 'e', 'f']
-        :param num:
-        any digit - only 1 digit used here
-        :return:
-        returns the corresponding letter
+        :param num:     any digit - only 1 digit used here
+        :return:        returns the corresponding letter
         """
         return chr(ord(str(num)) + 49)
 
@@ -289,11 +276,10 @@ class Board:
         """
         End of game
 
-        :param otherboard:
-            to populate the string
+        :param otherboard:  to populate the string
         :return: nothing returned
-        either quits
-        or restarts game
+                    either quits
+                    or restarts game
         """
         ScreenControl.clearline(24)
         msg = "lose." if self.name.lower() == "computer" else "win."
@@ -315,11 +301,9 @@ def startgame(playername):
     sets up display
     shows player and computers boards on display
 
-    :param playername:
-    so that the player name appears in the game
-    the computer is always "Computer"
-    :return:
-    nothing returned - game will be restarted or quit
+    :param playername:      so that the player name appears in the game
+                            the computer is always "Computer"
+    :return:        nothing returned - game will be restarted or quit
     """
     ScreenControl.setupdisplay()
     playerboard = Board(playername, 0)
@@ -327,7 +311,6 @@ def startgame(playername):
     playerboard.setupboard()
     compboard.setupboard()
     playerboard.showships()
-    compboard.showships()
 
     while True:
         validcoord = playerboard.makeaguess()
@@ -343,8 +326,7 @@ def getplayername():
     ask for player name
     verify its length is > 0
     and less than 15
-    :return:
-    the players inputted name
+    :return:    the players inputted name
     """
     maxlength = 15
     ScreenControl.clearscreen()

@@ -1,21 +1,5 @@
-"""
-control the display
-"""
-import logging
-
 import colorama
-# from colorama import just_fix_windows_console
 colorama.init()
-# just_fix_windows_console()
-
-
-def setup_logger(name, log_file, level=logging.DEBUG):
-    # To setup as many loggers as you want
-    handler = logging.FileHandler(log_file, "w", "utf-8")
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-    logger.addHandler(handler)
-    return logger
 
 
 class ScreenControl:
@@ -24,8 +8,6 @@ class ScreenControl:
     -   where to put data on display
     -   what color
     """
-
-    log = setup_logger("log", "bg.log")
     # foreground colors:
     FG_YELLOW = "\x1b[33m"
     FG_CYAN = "\x1b[36m"
@@ -61,8 +43,7 @@ class ScreenControl:
         start vertical position for the instances game
         :param start_x:
         start horizontal position for the instances game
-         :param name:
-         name of player or "Computer"
+         :param name:   name of player or "Computer"
         """
         self.name = name
         self.start_y = start_y
@@ -78,12 +59,9 @@ class ScreenControl:
         gets a square of 4 squares - as defined by xmoves and ymoves and colors
         them all
 
-        :param coord:
-        coord is a list e.g. ['3', 'd'] or ['5', 'f']
-        :param text:
-        the character to print
-        :return:
-        nothing
+        :param coord:   coord is a list e.g. ['3', 'd'] or ['5', 'f']
+        :param text:    the character to print
+        :return:        nothing
         """
         grid_start_x = 16
         grid_start_y = 2
@@ -109,41 +87,25 @@ class ScreenControl:
         position and print the labels for the rows in the players map grid
         these are printed down the screen so multiple calls to pos() are
         required
-        :param rowlist:
-        the Board objects list of row names
-        ['a', 'b', 'c', 'd', 'e', 'f']
-        :return:
-        nothing
+        :param rowlist:     the Board objects list of row names
+                ['a', 'b', 'c', 'd', 'e', 'f']
+        :return:    nothing
         """
-        # ScreenControl.log.debug(f"rowlist: {rowlist}")
         row_label_x = 16
         for i in range(len(rowlist)):
-            # ScreenControl.log.debug(
-            #     f"i = {i} i * 2 =  {i * 2} self.start_x = {self.start_x} row_label_x = {row_label_x}"
-            # )
-            # ScreenControl.log.debug(
-            #     f"printrowlabels {self.name} at self.start_y = {self.start_y} ScreenControl.GRID_GAP_X = {ScreenControl.GRID_GAP_X}"
-            # )
-            # ScreenControl.log.debug(
-            #     f"printrowlabels {self.name} at {self.start_x + row_label_x}, {self.start_y + ScreenControl.GRID_GAP_X + (i * 2)}, {rowlist[i]}"
-            # )
             ScreenControl.pos(
                 self.start_x + row_label_x,
                 self.start_y + ScreenControl.GRID_GAP_X + (i * 2),
-                # self.start_y + ScreenControl.GRID_GAP_Y,
                 rowlist[i],
             )
 
     def printcolumnlabels(self, columnlist):
         """
         position and print the labels for the columns in the players map grid
-        :param columnlist:
-        the Board objects list of column names
-        ['1', '2', '3', '4', '5', '6']
-        :return:
-        nothing
+        :param columnlist:        the Board objects list of column names
+                ['1', '2', '3', '4', '5', '6']
+        :return:    nothing
         """
-        # ScreenControl.log.debug(f"columnlist: {columnlist}")
         column_label_x = 18
         column_label_y = 1
 
@@ -157,8 +119,7 @@ class ScreenControl:
     def drawframe(self):
         """
         draw the frame around each player's map
-        :return:
-        nothing
+        :return:        nothing
         """
         frame_color = ScreenControl.BG_BLUE
         frame_bottom_y = 20
@@ -210,20 +171,17 @@ class ScreenControl:
     def clearline(yval):
         """
         clear the line on the screen denoted by y
-        :param yval:
-        the number of the line to be cleared
-        :return:
-        nothing
+        :param yval:    the number of the line to be cleared
+        :return:        nothing
         """
         ScreenControl.pos(1, yval, " " * 80)
 
     def printname(self, text):
         """
         print the players name in the correct position on the screen
-        :param text:
-        the players name amd its color formatting codes
-        :return:
-        nothing
+        :param text:    the players / computers name amd
+                        its color formatting codes
+        :return:    nothing
         """
         name_start_x = 4
         ScreenControl.pos(
@@ -237,9 +195,8 @@ class ScreenControl:
     def printmoves(self):
         """
         print the moves label under the players name in the correct position
-        on the screen
-        :return:
-        nothing
+            on the screen
+        :return:        nothing
         """
         moves_start_x = 4
         moves_start_y = 4
@@ -253,8 +210,7 @@ class ScreenControl:
         """
         print the hits label under the players name in the correct position
         on the screen
-        :return:
-        nothing
+        :return:        nothing
         """
         hits_start_x = 4
         hits_start_y = 6
@@ -267,10 +223,8 @@ class ScreenControl:
     def updatemoves(self, text):
         """
         update the number of moves on the screen
-        :param text:
-        the number to update moves to
-        :return:
-        nothing
+        :param text:        the number to update moves to
+        :return:        nothing
         """
         move_data_x = 11
         move_data_y = 4
@@ -283,10 +237,8 @@ class ScreenControl:
     def updatehits(self, text):
         """
         update the number of hits on the screen
-        :param text:
-        the number to update hits to
-        :return:
-        nothing
+        :param text:        the number to update hits to
+        :return:        nothing
         """
         hits_data_x = 11
         hits_data_y = 6
@@ -300,10 +252,8 @@ class ScreenControl:
     def printinfomessage(text):
         """
         show error messages from invalid guesses
-        :param text:
-        the error message
-        :return:
-        nothing
+        :param text:        the error message
+        :return:        nothing
         """
         ScreenControl.clearinfomessage()
         ScreenControl.pos(
@@ -314,8 +264,7 @@ class ScreenControl:
     def clearinfomessage():
         """
         remove the error message from the screen
-        :return:
-        nothing
+        :return:        nothing
         """
         ScreenControl.pos(
             ScreenControl.START_X,
@@ -336,21 +285,23 @@ class ScreenControl:
             " " * ScreenControl.SCREEN_WIDTH,
         )
         if nolinefeed:
-            ScreenControl.pos(ScreenControl.START_X, game_message_y, text, True)
+            ScreenControl.pos(
+                ScreenControl.START_X,
+                game_message_y,
+                text,
+                True
+                )
         else:
             ScreenControl.pos(ScreenControl.START_X, game_message_y, text)
 
     def printplayermessage(self, text):
         """
         show hit / miss information for the last guess
-        :param text:
-        the information
-        :return:
-        nothing
+        :param text:        the information
+        :return:        nothing
         """
         player_message_start_x = 2
         player_message_start_y = 17
-        ScreenControl.log.debug(f"printplayermessage() x = {self.start_x + player_message_start_x} y = {self.start_y + player_message_start_y} {text}")
         ScreenControl.pos(
             self.start_x + player_message_start_x,
             self.start_y + player_message_start_y,
@@ -361,8 +312,7 @@ class ScreenControl:
     def makeaguess():
         """
         position cursor and get guess for player
-        :return:
-        nothing
+        :return:        nothing
         """
         guess_y = 21
         ScreenControl.pos(
@@ -376,8 +326,7 @@ class ScreenControl:
         -   heading
         -   instructions
         -   the key - explains colors of squares
-        :return:
-        nothing
+        :return:        nothing
         """
         ScreenControl.clearscreen()
         ScreenControl.center(
@@ -400,8 +349,7 @@ class ScreenControl:
     def printkey():
         """
         prints the key on line 24
-        :return:
-        nothing
+        :return:        nothing
         """
         ScreenControl.pos(9, 24, f"ship: {ScreenControl.SHIP}", True)
         ScreenControl.pos(26, 24, f"hit:  {ScreenControl.SHELL_HIT}", True)
@@ -418,16 +366,11 @@ class ScreenControl:
         move to x,y and print text
         set nolinefeed to true for subsequest input statement
 
-        :param x_coord:
-        horizontal coordinate
-        :param y_coord:
-        vertical coordinate
-        :param text:
-        text to be printed
-        :param nolinefeed:
-        optional - for input statements
-        :return:
-        nothing
+        :param x_coord:     horizontal coordinate
+        :param y_coord:     vertical coordinate
+        :param text:        text to be printed
+        :param nolinefeed:  optional - for input statements
+        :return:            nothing
         """
         if nolinefeed:
             print(f"\x1b[{y_coord};{x_coord}H{text}", end="")
@@ -438,8 +381,7 @@ class ScreenControl:
     def clearscreen():
         """
         Clears the screen
-        :return:
-        nothing
+        :return:        nothing
         """
         print("\x1b[2J")
 
@@ -447,12 +389,9 @@ class ScreenControl:
     def center(row, text):
         """
         position text so that its horizontally central in window (80 cols)
-        :param row:
-        line to center on
-        :param text:
-        text to center
-        :return:
-        nothing
+        :param row:     line to center on
+        :param text:    text to center
+        :return:        nothing
         """
         xpos = int((80 - len(text)) / 2)
         ScreenControl.pos(xpos, row, text)
@@ -467,9 +406,7 @@ class ScreenControl:
             input - one of   ['a', 'b', 'c', 'd', 'e', 'f']
             output  - one of ['0', '1', '2', '3', '4', '5']
 
-        :param let:
-        any letter (English alphabet) - only 1 char used here
-        :return:
-        returns the corresponding number as string
+        :param let:     any letter (English alphabet) - only 1 char used here
+        :return:        returns the corresponding number as string
         """
         return chr(ord(str(let)) - 49)
