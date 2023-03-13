@@ -311,7 +311,7 @@ def startgame(playername):
     playerboard.setupboard()
     compboard.setupboard()
     playerboard.showships()
-    compboard.showships()
+    # compboard.showships()
 
     while True:
         validcoord = playerboard.makeaguess()
