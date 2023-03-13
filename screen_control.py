@@ -3,9 +3,10 @@ control the display
 """
 import logging
 
-from colorama import just_fix_windows_console
-
-just_fix_windows_console()
+import colorama
+# from colorama import just_fix_windows_console
+colorama.init()
+# just_fix_windows_console()
 
 
 def setup_logger(name, log_file, level=logging.DEBUG):
@@ -114,18 +115,18 @@ class ScreenControl:
         :return:
         nothing
         """
-        ScreenControl.log.debug(f"rowlist: {rowlist}")
+        # ScreenControl.log.debug(f"rowlist: {rowlist}")
         row_label_x = 16
         for i in range(len(rowlist)):
-            ScreenControl.log.debug(
-                f"i = {i} i * 2 =  {i * 2} self.start_x = {self.start_x} row_label_x = {row_label_x}"
-            )
-            ScreenControl.log.debug(
-                f"printrowlabels {self.name} at self.start_y = {self.start_y} ScreenControl.GRID_GAP_X = {ScreenControl.GRID_GAP_X}"
-            )
-            ScreenControl.log.debug(
-                f"printrowlabels {self.name} at {self.start_x + row_label_x}, {self.start_y + ScreenControl.GRID_GAP_X + (i * 2)}, {rowlist[i]}"
-            )
+            # ScreenControl.log.debug(
+            #     f"i = {i} i * 2 =  {i * 2} self.start_x = {self.start_x} row_label_x = {row_label_x}"
+            # )
+            # ScreenControl.log.debug(
+            #     f"printrowlabels {self.name} at self.start_y = {self.start_y} ScreenControl.GRID_GAP_X = {ScreenControl.GRID_GAP_X}"
+            # )
+            # ScreenControl.log.debug(
+            #     f"printrowlabels {self.name} at {self.start_x + row_label_x}, {self.start_y + ScreenControl.GRID_GAP_X + (i * 2)}, {rowlist[i]}"
+            # )
             ScreenControl.pos(
                 self.start_x + row_label_x,
                 self.start_y + ScreenControl.GRID_GAP_X + (i * 2),
@@ -142,7 +143,7 @@ class ScreenControl:
         :return:
         nothing
         """
-        ScreenControl.log.debug(f"columnlist: {columnlist}")
+        # ScreenControl.log.debug(f"columnlist: {columnlist}")
         column_label_x = 18
         column_label_y = 1
 
@@ -349,19 +350,12 @@ class ScreenControl:
         """
         player_message_start_x = 2
         player_message_start_y = 17
-
+        ScreenControl.log.debug(f"printplayermessage() x = {self.start_x + player_message_start_x} y = {self.start_y + player_message_start_y} {text}")
         ScreenControl.pos(
             self.start_x + player_message_start_x,
             self.start_y + player_message_start_y,
             text,
-            True,
         )
-
-    # def clearplayermessage(self):
-    #     """
-    #     clear hit / miss information
-    #     """
-    #     print("clearplayermessage 225")
 
     @staticmethod
     def makeaguess():

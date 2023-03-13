@@ -1,5 +1,6 @@
 import random
 import re
+import time
 
 from screen_control import ScreenControl
 
@@ -29,8 +30,8 @@ class Board:
         self.columns = [str(i) for i in range(1, self.size + 1)]
         self.rows = [Board.num2let(i) for i in range(Board.size)]
 
-        ScreenControl.log.debug(f"self.columns = {self.columns}")
-        ScreenControl.log.debug(f"self.rows    = {self.rows}")
+        # ScreenControl.log.debug(f"self.columns = {self.columns}")
+        # ScreenControl.log.debug(f"self.rows    = {self.rows}")
 
         while len(self.ships) < Board.num_ships:
             aval = random.choice(self.columns)
@@ -107,6 +108,18 @@ class Board:
                 break
         return validcoord
 
+    def shellinair(self):
+        ScreenControl.log.debug(f"{self.name} shellinair")
+        text = "Shell in the air...."
+        self.screencontrol.printplayermessage(
+            ScreenControl.BG_RED
+            + ScreenControl.FG_YELLOW
+            + ScreenControl.BRIGHT
+            + f"Shell in the air....{ScreenControl.RESET_ALL}"
+            + (" " * 18)
+        )
+        time.sleep(2)
+
     def processguess(self, guess, otherboard):
         """
         Processes the players validated guess
@@ -122,11 +135,15 @@ class Board:
             else true
         """
         self.moves.append(guess)
-        ScreenControl.log.debug(f"self.moves = {self.moves}")
+        # ScreenControl.log.debug(f"self.moves = {self.moves}")
+        self.shellinair()
         if guess in otherboard.ships:
             self.hits += 1
             self.screencontrol.printplayermessage(
-                f"{self.name} hit a ship at {guess}"
+                ScreenControl.BG_RED
+                + ScreenControl.FG_YELLOW
+                + ScreenControl.BRIGHT
+                + f"{self.name} hit a ship at {guess}{ScreenControl.RESET_ALL}"
             )
             # ScreenControl.pos(1, 24, f"hit: {guess}")
             otherboard.screencontrol.showongrid(guess, ScreenControl.SHELL_HIT)
