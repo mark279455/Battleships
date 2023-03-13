@@ -287,7 +287,7 @@ class Board:
             f"{self.name} has sunk all of {otherboard.name}'s "
             + f"ships. - you {msg}"
         )
-        ScreenControl.printinfomessage("Play again?")
+        ScreenControl.printinfomessage("Play again? y/n")
         ans = input("")
         if ans.lower().startswith("y"):
             main()
@@ -311,6 +311,7 @@ def startgame(playername):
     playerboard.setupboard()
     compboard.setupboard()
     playerboard.showships()
+    compboard.showships()
 
     while True:
         validcoord = playerboard.makeaguess()

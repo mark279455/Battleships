@@ -15,6 +15,7 @@ The GitHub repository:
 * [Features](#Features)
 * [Possible Development](#Possible-Development)
 * [Design and Implementation](#Design-and-Implementation)
+* [Data Model](#data-model)
 * [Technologies Used](#Technologies-Used)
 * [Testing](#Testing)
 * [Deployment](#Deployment)
@@ -47,7 +48,7 @@ Input is valid no matter which order is used.
 
 As much as possible, with the limitations of the Heroku Python Platform, I have tried to make the game more visual.
 
-a.      The ship placement is randomised.
+a.      The ship placement is randomised for both players.
 
 b.      The player cannot see the computer's ships
 
@@ -103,8 +104,6 @@ It is recommended that logging is implemented for development in this project, a
 
 ---
 
-## Testing
----
 ### Board Class
 
 The Board class has been tested with a PEP8 linter without issue.
@@ -259,8 +258,10 @@ Flowcharts provided for game logic.
 
 
 ---
+## Testing
+
+---
 ## Technologies Used
-* [Testing](#Testing)
 
 --- 
 ## Deployment
