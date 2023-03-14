@@ -21,67 +21,20 @@ class Board:
         """
         Board constructor
         """
-        self.name = name
-        self.screencontrol = ScreenControl(5, start_x, self.name)
+        # print(f"Board {name}")
+        self.screencontrol = ScreenControl(5, start_x)
         self.hits = 0
         self.ships = []
         self.moves = []
         self.columns = [str(i) for i in range(1, Board.size + 1)]
         self.rows = [Board.num2let(i) for i in range(Board.size)]
 
-        self.placeships()
-
-    def placeships(self):
-        """
-        genereate ship coords on map grid
-        3 subs = 2 squares
-        1 cruiser = 3 squares
-        1 battleship = 4 squares
-        :return: nothing - but self.ships will be populated
-        """
-        for _ in range(0, 2):
-            self.getship(2)
-        self.getship(3)
-        self.getship(4)
-
-    def getship(self, length):
-        """
-        generate ship of length
-        randomly orientate it - horiz or vert
-        make sure square not alreday used
-        make sure location is within map
-        :param length:
-        :return: nothing
-        """
-        newship = []
-        while True:
-            try:
-                direction = random.randint(0, 1)
-                while len(newship) < length:
-                    xval = random.randint(1, Board.size)
-                    yval = random.randint(1, Board.size)
-
-                    if direction == 1:
-                        for i in range(0, length):
-                            newship.append([xval + i, yval])
-                    else:
-                        for i in range(0, length):
-                            newship.append([xval, yval + i])
-                    for elem in newship:
-                        if [str(elem[0]), Board.num2let(elem[1])] in self.ships:
-                            raise ValueError(
-                                f"used {[str(elem[0]), Board.num2let(elem[1])]}"
-                            )
-                        if elem[0] > Board.size:
-                            raise ValueError(f"x out of range {elem[0]}")
-                        if elem[1] > Board.size - 1:
-                            raise ValueError(f"y out of range {elem[1]}")
-            except ValueError:
-                newship = []
-                continue
-            break
-        for elem in newship:
-            self.ships.append([str(elem[0]), Board.num2let(elem[1])])
+        while len(self.ships) < Board.num_ships:
+            aval = random.choice(self.columns)
+            bval = random.choice(self.rows)
+            if [aval, bval] not in self.ships:
+                self.ships.append([aval, bval])
+        self.name = name
 
     def setupboard(self):
         """
@@ -128,7 +81,7 @@ class Board:
     def showships(self):
         """
         Shows this boards ships (self) through ScreenControl on the screen.
-        :return:            nothing
+        no return value
         """
         for coord in self.ships:
             self.screencontrol.showongrid(coord, ScreenControl.SHIP)
@@ -227,62 +180,34 @@ class Board:
         :return:    returns a succesfully verified list e.g. ['4', 'd']
                     or false if unverified
         """
+        resultlist = []
         playerinput = playerinput.strip().lower()
         try:
-            if Board.validatelength2(playerinput):
-                resultlist = self.validateinputasletnum(playerinput)
-                if resultlist:
-                    self.validateinputasalready(resultlist)
-                    return resultlist
-        except ValueError as error:
-            ScreenControl.printinfomessage(f"{error}, please try again")
-        return False
-
-    @staticmethod
-    def validatelength2(inputdata):
-        """
-        called from validateinput with the players guess as a string
-        :param inputdata:   the players guess
-                            could be anything at this point
-        :return:        returns true is length = 2
-                        otherwise throws valueerror with error message
-        """
-        if len(inputdata) != 2:
-            raise ValueError(
-                "Input is 2 digits, a letter and a "
-                + f"number - you gave '{inputdata}'"
-            )
-        else:
-            return True
-
-    def validateinputasletnum(self, inputdata):
-        """
-        called from validateinput with the players guess as a string
-        uses regex to test if its within the map grid.
-        :param inputdata:   the players guess - is 2 chars at this point
-        :return:        returns the successfully validated result
-                            in the form ['4', 'd']
-                        or throws valueerror with error message
-        """
-        searchletters = "".join([str(i) for i in self.columns])
-        searchnumbers = "".join([str(i) for i in self.rows])
-        letnum = re.search(
-            "^[" + searchletters + "][" + searchnumbers + "]$",
-            inputdata,
-        )
-        numlet = re.search(
-            "^[" + searchnumbers + "][" + searchletters + "]$",
-            inputdata,
-        )
-        if letnum is not None:
-            resultlist = [inputdata[0], inputdata[1]]
-        elif numlet is not None:
-            resultlist = [inputdata[::-1][0], inputdata[::-1][1]]
-        else:
-            raise ValueError(
-                "Input out of range, " + f"'{inputdata}' is not on the board"
-            )
-        return resultlist
+            if len(playerinput) != 2:
+                raise ValueError(
+                    "Input is 2 digits, a letter and a " +
+                    f"number - you gave '{playerinput}'"
+                )
+            else:
+                searchletters = "".join([str(i) for i in self.columns])
+                searchnumbers = "".join([str(i) for i in self.rows])
+                letnum = re.search(
+                    "^[" + searchletters + "][" + searchnumbers + "]$",
+                    playerinput,
+                )
+                numlet = re.search(
+                    "^[" + searchnumbers + "][" + searchletters + "]$",
+                    playerinput,
+                )
+            if letnum is not None:
+                resultlist = [playerinput[0], playerinput[1]]
+            elif numlet is not None:
+                resultlist = [playerinput[::-1][0], playerinput[::-1][1]]
+            else:
+                raise ValueError(
+                    "input out of range, " +
+                    f"'{playerinput}' is not on the board"
+                )
 
     def validateinputasalready(self, inputdata):
         """
@@ -326,10 +251,9 @@ class Board:
         ScreenControl.clearline(24)
         msg = "lose." if self.name.lower() == "computer" else "win."
         ScreenControl.printendgamemessage(
-            f"{self.name} has sunk all of {otherboard.name}'s "
-            + f"ships. - you {msg}"
-        )
-        ScreenControl.printinfomessage("Press 'y' to play again")
+            f"{self.name} has sunk all of {otherboard.name}'s " +
+            f"ships. - you {msg}")
+        ScreenControl.printinfomessage("Play again?")
         ans = input("")
         if ans.lower().startswith("y"):
             main()
@@ -354,6 +278,8 @@ def startgame(playername):
     playerboard.setupboard()
     compboard.setupboard()
     playerboard.showships()
+    compboard.setupboard()
+    # compboard.showships()
 
     while True:
         validcoord = playerboard.makeaguess()

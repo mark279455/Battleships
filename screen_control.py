@@ -1,6 +1,21 @@
-import colorama
+"""
+control the display
+"""
+# import logging
 
-colorama.init()
+
+from colorama import just_fix_windows_console
+
+just_fix_windows_console()
+
+
+# def setup_logger(name, log_file, level=logging.DEBUG):
+#     # To setup as many loggers as you want
+#     handler = logging.FileHandler(log_file, "w", "utf-8")
+#     logger = logging.getLogger(name)
+#     logger.setLevel(level)
+#     logger.addHandler(handler)
+#     return logger
 
 
 class ScreenControl:
@@ -10,6 +25,7 @@ class ScreenControl:
     -   what color
     """
 
+    # log = setup_logger("log", "bg.log")
     # foreground colors:
     FG_YELLOW = "\x1b[33m"
     FG_CYAN = "\x1b[36m"
@@ -58,12 +74,8 @@ class ScreenControl:
         second digit is a letter which needs conversion to a number
         let2num converts a to 0, b to 1 etc
 
-        gets a square of 4 squares - as defined by xmoves and ymoves
-            and colors them all
-
-        :param coord:   coord is a list e.g. ['3', 'd'] or ['5', 'f']
-        :param text:    the character to print
-        :return:        nothing
+        gets a square of 4 squares - as defined by xmoves and ymoves and colors 
+        them all
         """
         grid_start_x = 16
         grid_start_y = 2
