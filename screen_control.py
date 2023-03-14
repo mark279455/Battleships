@@ -2,6 +2,7 @@ import colorama
 
 colorama.init()
 
+
 class ScreenControl:
     """
         Controls all display elements
@@ -57,8 +58,8 @@ class ScreenControl:
         second digit is a letter which needs conversion to a number
         let2num converts a to 0, b to 1 etc
 
-        gets a square of 4 squares - as defined by xmoves and ymoves and colors
-        them all
+        gets a square of 4 squares - as defined by xmoves and ymoves
+            and colors them all
 
         :param coord:   coord is a list e.g. ['3', 'd'] or ['5', 'f']
         :param text:    the character to print
@@ -286,7 +287,12 @@ class ScreenControl:
             " " * ScreenControl.SCREEN_WIDTH,
         )
         if nolinefeed:
-            ScreenControl.pos(ScreenControl.START_X, game_message_y, text, True)
+            ScreenControl.pos(
+                ScreenControl.START_X,
+                game_message_y,
+                text,
+                True
+                )
         else:
             ScreenControl.pos(ScreenControl.START_X, game_message_y, text)
 

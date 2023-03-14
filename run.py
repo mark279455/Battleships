@@ -70,13 +70,14 @@ class Board:
                     for s in newship:
                         if [str(s[0]), Board.num2let(s[1])] in self.ships:
                             raise ValueError(
-                                f"already used {[str(s[0]), Board.num2let(s[1])]}"
+                                "already used "
+                                + [str(s[0]), Board.num2let(s[1])]
                             )
                         if s[0] > Board.size:
                             raise ValueError(f"x out of range {s[0]}")
                         if s[1] > Board.size - 1:
                             raise ValueError(f"y out of range {s[1]}")
-            except ValueError as error:
+            except ValueError:
                 newship = []
                 continue
             break
