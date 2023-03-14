@@ -39,7 +39,7 @@ class Board:
         1 battleship = 4 squares
         :return: nothing - but self.ships will be populated
         """
-        for i in range(0, 2):
+        for _ in range(0, 2):
             self.getship(2)
         self.getship(3)
         self.getship(4)
@@ -67,22 +67,21 @@ class Board:
                     else:
                         for i in range(0, length):
                             newship.append([xval, yval + i])
-                    for s in newship:
-                        if [str(s[0]), Board.num2let(s[1])] in self.ships:
+                    for elem in newship:
+                        if [str(elem[0]), Board.num2let(elem[1])] in self.ships:
                             raise ValueError(
-                                "already used "
-                                + [str(s[0]), Board.num2let(s[1])]
+                                f"used {[str(elem[0]), Board.num2let(elem[1])]}"
                             )
-                        if s[0] > Board.size:
-                            raise ValueError(f"x out of range {s[0]}")
-                        if s[1] > Board.size - 1:
-                            raise ValueError(f"y out of range {s[1]}")
+                        if elem[0] > Board.size:
+                            raise ValueError(f"x out of range {elem[0]}")
+                        if elem[1] > Board.size - 1:
+                            raise ValueError(f"y out of range {elem[1]}")
             except ValueError:
                 newship = []
                 continue
             break
-        for s in newship:
-            self.ships.append([str(s[0]), Board.num2let(s[1])])
+        for elem in newship:
+            self.ships.append([str(elem[0]), Board.num2let(elem[1])])
 
     def setupboard(self):
         """
