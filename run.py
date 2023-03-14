@@ -71,13 +71,13 @@ class Board:
                         searchcoord = [str(elem[0]), Board.num2let(elem[1])]
                         if searchcoord in self.ships:
                             raise ValueError(f"used {searchcoord}")
-                        if searchcoord[0] > Board.size:
+                        if elem[0] > Board.size:
                             raise ValueError(
-                                f"x out of range {searchcoord[0]}"
+                                f"x out of range {elem[0]}"
                             )
-                        if searchcoord[1] > Board.size - 1:
+                        if elem[1] > Board.size - 1:
                             raise ValueError(
-                                f"y out of range {searchcoord[1]}"
+                                f"y out of range {elem[1]}"
                             )
             except ValueError:
                 newship = []
