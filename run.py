@@ -39,7 +39,7 @@ class Board:
         1 battleship = 4 squares
         :return: nothing
         """
-        for i in range(0, 2):
+        for _ in range(0, 2):
             self.getship(2)
         self.getship(3)
         self.getship(4)
@@ -68,14 +68,17 @@ class Board:
                         for i in range(0, length):
                             newship.append([xval, yval + i])
                     for elem in newship:
-                        if [str(elem[0]), Board.num2let(elem[1])] in self.ships:
+                        searchcoord = [str(elem[0]), Board.num2let(elem[1])]
+                        if searchcoord in self.ships:
+                            raise ValueError(f"used {searchcoord}")
+                        if searchcoord[0] > Board.size:
                             raise ValueError(
-                                f"used {[str(elem[0]), Board.num2let(elem[1])]}"
+                                f"x out of range {searchcoord[0]}"
                             )
-                        if elem[0] > Board.size:
-                            raise ValueError(f"x out of range {elem[0]}")
-                        if elem[1] > Board.size - 1:
-                            raise ValueError(f"y out of range {elem[1]}")
+                        if searchcoord[1] > Board.size - 1:
+                            raise ValueError(
+                                f"y out of range {searchcoord[1]}"
+                            )
             except ValueError:
                 newship = []
                 continue
@@ -300,21 +303,6 @@ class Board:
             ScreenControl.clearinfomessage()
             return inputdata
 
-
-    @staticmethod
-    def num2let(num):
-        """
-        Converts numbers to letters
-        -   ascii code of str(number) + 49
-        -   '0' is ascii '48' will be converted to 'a' ascii '97'
-        format:
-            input - one of   ['0', '1', '2', '3', '4', '5']
-            output  - one of ['a', 'b', 'c', 'd', 'e', 'f']
-        :param num:     any digit - only 1 digit used here
-        :return:        returns the corresponding letter
-        """
-        return chr(ord(str(num)) + 49)
-
     def gameover(self, otherboard):
         """
         End of game
@@ -337,6 +325,20 @@ class Board:
         else:
             print("Battleships has ended")
             quit()
+
+    @staticmethod
+    def num2let(num):
+        """
+        Converts numbers to letters
+        -   ascii code of str(number) + 49
+        -   '0' is ascii '48' will be converted to 'a' ascii '97'
+        format:
+            input - one of   ['0', '1', '2', '3', '4', '5']
+            output  - one of ['a', 'b', 'c', 'd', 'e', 'f']
+        :param num:     any digit - only 1 digit used here
+        :return:        returns the corresponding letter
+        """
+        return chr(ord(str(num)) + 49)
 
 
 def startgame(playername):
@@ -372,7 +374,7 @@ def getplayername():
     and less than 15
     :return:    the players inputted name
     """
-    maxlength = 15
+    maxlength = 12
     ScreenControl.clearscreen()
     while True:
         ScreenControl.pos(2, 2, "Welcome To Battleships")

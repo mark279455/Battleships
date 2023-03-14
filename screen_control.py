@@ -57,7 +57,7 @@ class ScreenControl:
         second digit is a letter which needs conversion to a number
         let2num converts a to 0, b to 1 etc
 
-        gets a square of 4 squares - as defined by xmoves and ymoves and colors 
+        gets a square of 4 squares - as defined by xmoves and ymoves and colors
         them all
         """
         grid_start_x = 16
@@ -297,12 +297,27 @@ class ScreenControl:
         :param text:        the information
         :return:        nothing
         """
+        self.clearplayermessage()
         player_message_start_x = 2
         player_message_start_y = 17
         ScreenControl.pos(
             self.start_x + player_message_start_x,
             self.start_y + player_message_start_y,
             text,
+        )
+
+    def clearplayermessage(self):
+        """
+        clear the show hit / miss information for the last guess
+        :param text:    nothing
+        :return:        nothing
+        """
+        player_message_start_x = 2
+        player_message_start_y = 17
+        ScreenControl.pos(
+            self.start_x + player_message_start_x,
+            self.start_y + player_message_start_y,
+            " " * 38,
         )
 
     @staticmethod
