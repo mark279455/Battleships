@@ -35,7 +35,13 @@ The person that 'sinks' all their opponents ships first is the winner.
 
 [Wikipedia Battleships](https://en.wikipedia.org/wiki/Battleship_(game))
 
-When the boards load you will see your ships on the left, and the computer's on the right.
+When the boards load you will see your ships on the left, on the right is a map for you to find the conputer's ships.
+
+Both sides have..
+        
+        2 submarines (2 squares)
+        1 cruiser    (3 squares)
+        1 battleship (4 squares)
 
 you select your target square by keying the name of the square - one number (1-6) and 1 letter (a-f).
 
@@ -46,50 +52,51 @@ Input is valid no matter which order is used.
 
 ## Features
 
-As much as possible, with the limitations of the Heroku Python Platform, I have tried to make the game more visual.
+As much as possible, with the limitations of the Heroku Python Platform, I have tried to make the game as visual as posisble.
 
-a.      The ship placement is randomised for both players.
 
-b.      The player cannot see the computer's ships
+![Game Page](documentation/game/start_game.png)
 
-c.      The game is played on a 6 by 6 grid, with numbers (1-6) as columns and letters (a-f) as rows.
 
-d.      Input is accepted in the format row/column or column/row - i.e. you can enter 'c4' or '4c'.
+###      The ship placement is randomised for both players.
 
-e.      The key for the ships is displayed during the game.
+###     The player cannot see the computer's ships
+
+###     The game is played on a 6 by 6 grid, with numbers (1-6) as columns and letters (a-f) as rows.
+
+###     Input is accepted in the format row/column or column/row - i.e. you can enter 'c4' or '4c'.
+
+###     The key for the ships is displayed during the game.
 
         - An unknown square is plain white.
         - The players ships are purple.
         - A hit is red.
         - A miss is yellow.
 
-![Game Page](documentation/game/start_game.png)
-
-f.      Information about the last moves is shown for both sides.
+###      Information about the last moves is shown for both sides.
 
 ![Move Information](documentation/game/move_info.png)
 
-g.      Error messages are shown if input validation fails. Errors are shown if...
+###     Error messages are shown if input validation fails. Errors are shown if...
 
-        A coordinate is given that is invalid - i.e. not a letter and a number
-![Invalid](documentation/game/invalid.png)
-
-        A valid coordinate is given, but not on the map.
-![Offmap](documentation/game/offmap.png)
-
-        A coordinate has already been targeted.
-![Already](documentation/game/already.png)
+        - A coordinate is given that is invalid - i.e. not a letter and a number
+        - A valid coordinate is given, but not on the map.
+        - A coordinate has already been targeted.
+- see * [Testing](#Testing)
         
-h.      Scores and moves are maintained by the game
+
+###     Scores and moves are maintained by the game
+
 ![MovesScores](documentation/game/moves_scores.png)
+
 
 ---
 
 ## Possible Development
 
 Possible developments could be...
--       Different shaped ships - not just one square
--       The player chooses how big the screen is, and how many ships are used. (This is difficult on the Heroku Python platform as there is very limited space)
+-       The player chooses how big the screen is, and how many ships are used. (This is difficult 
+                on the Heroku Python platform as there is very limited space)
 
 ---
 ## Design and Implementation
@@ -260,11 +267,93 @@ Flowcharts provided for game logic.
 ---
 ## Testing
 
+Testing was performed on all parts of the screen positioning code to
+
+check that text appeared in the correct part of the display.
+
+Also testing was performed on all incorrect player input...
+
+
+###      Error messages are shown if input validation fails. Errors are shown if...
+
+        A coordinate is given that is invalid - i.e. not a letter and a number
+
+![Invalid](documentation/game/invalid.png)
+
+        A valid coordinate is given, but not on the map.
+
+![Offmap](documentation/game/offmap.png)
+
+        A coordinate has already been targeted.
+
+![Already](documentation/game/already.png)
+        
+
 ---
+
 ## Technologies Used
 
+        This project uses Python.
+        
+        Plugins:
+                Colorama - gives access to ANSI screen control codes.
+
+        Development was done using Gitpod.
+        
+        Heroku Cloud applictaion platform
 --- 
+
 ## Deployment
+
+
+The project was deployed using the Heroku Cloud applictaion platform.
+
+It is assumed here that GitHub and GitPod accounts are already set up.
+
+Preliminary steps...
+
+a.	from the console window in GitPod enter the following command..
+
+		pip freeze > requirements.txt
+	
+	This will push the requirements of the project into the requirements.txt file,
+	and allow Heroku the configuration information that it needs to build the project.
+	
+b.	Make sure changes are committed and pushed to GitHub before continuing.
+
+To deploy to Heroku, follow these steps...
+
+a.	Go to [Heroku](https://www.heroku.com/) and create a free account.
+
+b.	The site will send an email for verification. Perform the required email confirmation.
+
+c.	Once logged in....
+
+        	Click new / Create new app
+	
+d.	Give the app a unique name, pick your region between United States and Europe, and click "Create app".
+
+e.	Click on the Settings tab, and go to the Buildpacks section.
+
+f.	Click "Add buildpack", select the "Python" option, and click save.
+
+g.	Click "Add buildpack" select the "nodejs" option, and click save.
+
+		Make sure that "python" is the first option and "nodejs" the second.
+			- they can be dragged here to change the order.
+			
+h.	Settings are complete - click the "Deploy" tab.
+
+i.	Click GitHub for Deployment method
+
+		search for the project name in the search box, and click connect.
+		
+j.	From here you can select Automatic or Manual deploy.
+
+		Automatic deploy will re-deploy the application every time the project is "git pushed".
+		
+k.	If you select "Manual deploy", after the project has been built, click "view" to 
+                see the deployed page.
 
 ---
 ## Credits
