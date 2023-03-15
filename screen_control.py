@@ -13,6 +13,7 @@ class ScreenControl:
     FG_YELLOW = "\x1b[33m"
     FG_CYAN = "\x1b[36m"
     FG_WHITE = "\x1b[37m"
+    FG_RED = "\x1b[31m"
     # background colors
     BG_RED = "\x1b[41m"
     BG_YELLOW = "\x1b[43m"
