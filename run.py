@@ -238,7 +238,7 @@ class Board:
                     self.validateinputasalready(resultlist)
                     return resultlist
         except ValueError as error:
-                ScreenControl.printinfomessage(
+            ScreenControl.printinfomessage(
                 ScreenControl.FG_RED
                 + ScreenControl.BRIGHT
                 + f"{error}, please try again{ScreenControl.RESET_ALL}")

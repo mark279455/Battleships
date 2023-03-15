@@ -267,11 +267,15 @@ Flowcharts provided for game logic.
 ---
 ## Testing
 
+Both of the code files were successfully run though the [Code Institute PEP8 Linter](https://pep8ci.herokuapp.com/)  
+
+
+
 Testing was performed on all parts of the screen positioning code to
+        check that text appeared in the correct part of the display.
 
-check that text appeared in the correct part of the display.
 
-Also testing was performed on all incorrect player input...
+Testing was performed on all incorrect player input...
 
 
 ###      Error messages are shown if input validation fails. Errors are shown if...
@@ -356,6 +360,11 @@ k.	If you select "Manual deploy", after the project has been built, click "view"
                 see the deployed page.
 
 ---
+
 ## Credits
 
+The Heroku Python template was provided by Code Institute.
+Thanks to Gareth McGirr - my course mentor.
+Code Institute tutors helped vastly when my GitHub repository started playing up.
+The Code Institute Slack Community
 
