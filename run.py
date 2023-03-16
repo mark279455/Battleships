@@ -384,7 +384,7 @@ def getplayername():
         ScreenControl.pos(2, 2, "Welcome To Battleships")
         ScreenControl.clearline(5)
         ScreenControl.pos(2, 5, "", True)
-        name = input("Please enter your name ")
+        name = input("Please enter your name \n")
         if 0 < len(name) < maxlength:
             break
         else:
