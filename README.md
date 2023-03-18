@@ -363,8 +363,8 @@ k.	If you select "Manual deploy", after the project has been built, click "view"
 
 ## Credits
 
-The Heroku Python template was provided by Code Institute.
-Thanks to Gareth McGirr - my course mentor.
-Code Institute tutors helped vastly when my GitHub repository started playing up.
-The Code Institute Slack Community
+    The Heroku Python template was provided by Code Institute.
+    Thanks to Gareth McGirr - my course mentor.
+    Code Institute tutors helped vastly when my GitHub repository started playing up.
+    The Code Institute Slack Community
 
